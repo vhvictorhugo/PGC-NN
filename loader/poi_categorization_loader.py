@@ -118,6 +118,3 @@ class PoiCategorizationLoader:
         output_dir = output_dir + str(n_folds) + "_folds/" + str(n_replications) + "_replications/"
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         model.save('model.h5')
-
-        # save_model(model, filepath=output_dir)
-        # model.save(output_dir+"saved_model")
