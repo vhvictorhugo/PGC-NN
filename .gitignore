@@ -1,3 +1,7 @@
 *.csv
 myenv/
+output/
+.ipynb_checkpoints/
+__pycache__/
 *.pyc
+*.pyo
