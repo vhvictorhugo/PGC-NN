@@ -214,7 +214,6 @@ class PoiCategorizationJob:
         print("Usuarios processados: ", usuarios)
         print("Tamanho máximo de matriz: ", max_size_matrices)
         print("Quantidade mínima de registros: ", max_size_paths)
-        input()
 
     def files_verification(self, country, state, adjacency_matrix_filename, temporal_matrix_filename,
                            adjacency_matrix_week_filename, temporal_matrix_week_filename,
