@@ -164,30 +164,30 @@ GOWALLA_DURATION_WEEKEND_FILENAME_US="processed_data/duration_matrix_weekend_not
 # TRANSACTIONS_BASE_DIR="${GLOBAL_FOURSQUARE_BASE_DIR}transactions/"
 
 # base model
-# MATRIX_GENERATION_FOR_POI_CATEGORIZATION_CONFIG='{
-#           "job": "matrix_generation_for_poi_categorization",
-#           "users_checkin_filename": "'$GOWALLA_LOCAL_DATETIME_US_TEXAS'",
-#           "base_dir":"'$GOWALLA_BASE_DIR'",
-#           "directed_folder":"directed/",
-#           "not_directed_folder":"not_directed/",
-#           "adjacency_matrix_base_filename":"'$ADJACENCY_MATRIX_BASE_FILENAME'",
-#           "features_matrix_base_filename":"'$FEATURES_MATRIX_BASE_FILENAME'",
-#           "distance_matrix_base_filename":"'$DISTANCE_MATRIX_BASE_FILENAME'",
-#           "duration_matrix_base_filename":"'$DURATION_MATRIX_BASE_FILENAME'",
-#           "hour48":"yes",
-#           "personal_features_matrix":"no",
-#           "sequence_matrix_base_filename":"'$SEQUENCE_MATRIX_BASE_FILENAME'",
-#           "country":"United States",
-#           "state":"",
-#           "different_venues":"yes",
-#           "max_time_between_records": "",
-#           "top_users":"40000",
-#           "directed":"yes",
-#           "dataset_name":"gowalla",
-#           "pattern_matrices":"no",
-#           "base":"base",
-#           "categories_type":"7_categories"
-#           }'
+MATRIX_GENERATION_FOR_POI_CATEGORIZATION_CONFIG='{
+          "job": "matrix_generation_for_poi_categorization",
+          "users_checkin_filename": "'$GOWALLA_LOCAL_DATETIME_US_TEXAS'",
+          "base_dir":"'$GOWALLA_BASE_DIR'",
+          "directed_folder":"directed/",
+          "not_directed_folder":"not_directed/",
+          "adjacency_matrix_base_filename":"'$ADJACENCY_MATRIX_BASE_FILENAME'",
+          "features_matrix_base_filename":"'$FEATURES_MATRIX_BASE_FILENAME'",
+          "distance_matrix_base_filename":"'$DISTANCE_MATRIX_BASE_FILENAME'",
+          "duration_matrix_base_filename":"'$DURATION_MATRIX_BASE_FILENAME'",
+          "hour48":"yes",
+          "personal_features_matrix":"no",
+          "sequence_matrix_base_filename":"'$SEQUENCE_MATRIX_BASE_FILENAME'",
+          "country":"United States",
+          "state":"",
+          "different_venues":"yes",
+          "max_time_between_records": "",
+          "top_users":"40000",
+          "directed":"yes",
+          "dataset_name":"gowalla",
+          "pattern_matrices":"no",
+          "base":"base",
+          "categories_type":"7_categories"
+          }'
 
 # base
 CATEGORIZATION_CONFIG='{
@@ -327,9 +327,9 @@ case $1 in
 #   "categorization_performance")
 #     python3 main.py "${CATEGORIZATION_PERFORMANCE_GRAPHICS_CONFIG}"
 #     ;;
-#   "matrix_generation")
-#     python3 main.py "${MATRIX_GENERATION_FOR_POI_CATEGORIZATION_CONFIG}"
-#     ;;
+  "matrix_generation_for_poi_categorization")
+    python3 main.py "${MATRIX_GENERATION_FOR_POI_CATEGORIZATION_CONFIG}"
+    ;;
 #   "hmrm_baseline")
 #     python3 main.py "${BASELINES_CONFIG}"
 #     ;;

@@ -6,6 +6,7 @@ warnings.filterwarnings("ignore")
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 from job.poi_categorization_job import PoiCategorizationJob
+from job.matrix_generation_for_poi_categorization_job import MatrixGenerationForPoiCategorizationJob
 from foundation.configuration.input import Input
 
 def start_input(args):
@@ -19,6 +20,8 @@ def start_job(args):
     print(job_name)
     if job_name == "categorization":
         job = PoiCategorizationJob()
+    elif job_name == "matrix_generation_for_poi_categorization":
+        job = MatrixGenerationForPoiCategorizationJob()
 
     job.start()
 
