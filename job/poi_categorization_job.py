@@ -2,19 +2,16 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
-from domain.user_step_domain import UserStepDomain
 from foundation.abs_classes.job import Job
 from domain.poi_categorization_domain import PoiCategorizationDomain
 from extractor.file_extractor import FileExtractor
 from foundation.configuration.input import Input
-from foundation.util.general_utils import join_df
 from configuration.poi_categorization_configuration import PoICategorizationConfiguration
 from loader.poi_categorization_loader import PoiCategorizationLoader
 
 class PoiCategorizationJob:
 
     def __init__(self):
-        self.user_step_domain = UserStepDomain()
         self.file_extractor = FileExtractor()
         self.poi_categorization_domain = PoiCategorizationDomain(Input.get_instance().inputs['dataset_name'])
         self.poi_categorization_loader = PoiCategorizationLoader()
@@ -30,11 +27,7 @@ class PoiCategorizationJob:
         temporal_matrix_week_filename = Input.get_instance().inputs['temporal_matrix_week_filename']
         temporal_matrix_weekend_filename = Input.get_instance().inputs['temporal_matrix_weekend_filename']
         distance_matrix_filename = Input.get_instance().inputs['distance_matrix_filename']
-        # distance_matrix_weekday_filename = Input.get_instance().inputs['distance_matrix_week_filename']
-        # distance_magrix_weekend_filename = Input.get_instance().inputs['distance_matrix_weekend_filename']
         duration_matrix_filename = Input.get_instance().inputs['duration_matrix_filename']
-        # duration_matrix_weekday_filename = Input.get_instance().inputs['duration_matrix_week_filename']
-        # duration_matrix_weekend_filename = Input.get_instance().inputs['duration_matrix_weekend_filename']
         dataset_name = Input.get_instance().inputs['dataset_name']
         base = Input.get_instance().inputs['base']
         categories_type = Input.get_instance().inputs['categories_type']
@@ -45,9 +38,6 @@ class PoiCategorizationJob:
         state = Input.get_instance().inputs['state']
         version = Input.get_instance().inputs['version']
         print("Dataset: ", Input.get_instance().inputs['dataset_name'])
-
-        # assert tf.test.is_gpu_available()
-        # assert tf.test.is_built_with_cuda()
 
         max_size_matrices = self.poi_categorization_configuration.MAX_SIZE_MATRICES[1]
         max_size_paths = self.poi_categorization_configuration.MINIMUM_RECORDS[1]
@@ -90,14 +80,6 @@ class PoiCategorizationJob:
         else:
             base = False
 
-        # adjacency_matrix_filename = base_dir + adjacency_matrix_filename
-        # temporal_matrix_filename = base_dir + temporal_matrix_filename
-        # distance_matrix_filename = base_dir + distance_matrix_filename
-        # duration_matrix_filename = base_dir + duration_matrix_filename
-        # adjacency_matrix_week_filename = base_dir + adjacency_matrix_week_filename
-        # temporal_matrix_week_filename = base_dir + temporal_matrix_week_filename
-        # adjacency_matrix_weekend_filename = base_dir + adjacency_matrix_weekend_filename
-        # temporal_matrix_weekend_filename = base_dir + temporal_matrix_weekend_filename
         adjacency_matrix_filename = adjacency_matrix_filename
         temporal_matrix_filename = temporal_matrix_filename
         distance_matrix_filename = distance_matrix_filename
