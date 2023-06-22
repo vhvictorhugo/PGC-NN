@@ -99,9 +99,12 @@ GLOBAL_FOURSQUARE_NOT_DIRECTED_FOLDER="matrizes/not_directed/"
 # GLOBAL_FOURQUARE_USER_METRICS_FILENAME_US="files/global_foursquare_user_metrics_US.csv"
 
 # gowalla
-GOWALLA_BASE_DIR="processed_data/"
+GOWALLA_BASE_DIR="gowalla/processed/"
+# GOWALLA_BASE_DIR="gowalla/"
+# GOWALLA_BASE_DIR="processed_data/"
 # GOWALLA_LOCAL_DATETIME_US="/media/claudio/Data/backup_win_hd/Downloads/doutorado/gowalla/gowalla_checkins_7_categories_local_datetime_columns_reduced_us.csv"
 # GOWALLA_LOCAL_DATETIME_US_TEXAS="/media/claudio/Data/backup_win_hd/Downloads/doutorado/gowalla/gowalla_checkins_7_categories_local_datetime_columns_reduced_us_texas.csv"
+GOWALLA_LOCAL_DATETIME_US_TEXAS="gowalla/checks.csv"
 GOWALLA_DIRECTED_FOLDER=${GOWALLA_BASE_DIR}"matrices/directed/"
 GOWALLA_NOT_DIRECTED_FOLDER=${GOWALLA_BASE_DIR}"matrices/not_directed/"
 GOWALLA_ADJACENCY_FILENAME_BR="adjacency_matrix_not_directed_48_5_categories_BR.csv"
@@ -116,24 +119,27 @@ GOWALLA_DISTANCE_WEEKEND_FILENAME_BR="distance_matrix_weekend_not_directed_48_5_
 GOWALLA_DURATION_FILENAME_BR="duration_matrix_not_directed_48_5_categories_BR.csv"
 GOWALLA_DURATION_WEEK_FILENAME_BR="duration_matrix_weekday_not_directed_48_5_categories_BR.csv"
 GOWALLA_DURATION_WEEKEND_FILENAME_BR="duration_matrix_weekend_not_directed_48_5_categories_BR.csv"
-GOWALLA_LOCATION_LOCATION_PMI_MATRIX_US_TEXAS="processed_data/location_location_pmi_matrix_7_categories_US.npz"
-GOWALLA_LOCATION_TIME_PMI_MATRIX_US_TEXAS="processed_data/location_time_pmi_matrix_7_categories_US.csv"
-GOWALLA_INT_TO_LOCATIONID_US_TEXAS="processed_data/int_to_locationid_7_categories_US.csv"
+# GOWALLA_LOCATION_LOCATION_PMI_MATRIX_US_TEXAS="processed_data/location_location_pmi_matrix_7_categories_US.npz"
+GOWALLA_LOCATION_LOCATION_PMI_MATRIX_US_TEXAS="gowalla/processed/location_location_pmi_matrix_7_categories_US.npz"
+# GOWALLA_LOCATION_TIME_PMI_MATRIX_US_TEXAS="processed_data/location_time_pmi_matrix_7_categories_US.csv"
+GOWALLA_LOCATION_TIME_PMI_MATRIX_US_TEXAS="gowalla/processed/location_time_pmi_matrix_7_categories_US.csv"
+# GOWALLA_INT_TO_LOCATIONID_US_TEXAS="processed_data/int_to_locationid_7_categories_US.csv"
+GOWALLA_INT_TO_LOCATIONID_US_TEXAS="gowalla/processed/int_to_locationid_7_categories_US.csv"
 
 # us
 # GOWALLA_LOCAL_DATETIME_BR="/media/claudio/Data/backup_win_hd/Downloads/doutorado/gowalla/gowalla_checkins_5_categories_osm_local_datetime_columns_reduced_us.csv"
-GOWALLA_ADJACENCY_FILENAME_US="processed_data/adjacency_matrix_not_directed_48_7_categories_US.csv"
-GOWALLA_ADJACENCY_WEEK_FILENAME_US="processed_data/adjacency_matrix_weekday_not_directed_48_7_categories_US.csv"
-GOWALLA_ADJACENCY_WEEKEND_FILENAME_US="processed_data/adjacency_matrix_weekend_not_directed_48_7_categories_US.csv"
-GOWALLA_TEMPORAL_FILENAME_US="processed_data/features_matrix_not_directed_48_7_categories_US.csv"
-GOWALLA_TEMPORAL_WEEK_FILENAME_US="processed_data/features_matrix_weekday_not_directed_48_7_categories_US.csv"
-GOWALLA_TEMPORAL_WEEKEND_FILENAME_US="processed_data/features_matrix_weekend_not_directed_48_7_categories_US.csv"
-GOWALLA_DISTANCE_FILENAME_US="processed_data/distance_matrix_not_directed_48_7_categories_US.csv"
-GOWALLA_DISTANCE_WEEK_FILENAME_US="processed_data/distance_matrix_weekday_not_directed_48_7_categories_US.csv"
-GOWALLA_DISTANCE_WEEKEND_FILENAME_US="processed_data/distance_matrix_weekend_not_directed_48_7_categories_US.csv"
-GOWALLA_DURATION_FILENAME_US="processed_data/duration_matrix_not_directed_48_7_categories_US.csv"
-GOWALLA_DURATION_WEEK_FILENAME_US="processed_data/duration_matrix_weekday_not_directed_48_7_categories_US.csv"
-GOWALLA_DURATION_WEEKEND_FILENAME_US="processed_data/duration_matrix_weekend_not_directed_48_7_categories_US.csv"
+GOWALLA_ADJACENCY_FILENAME_US="gowalla/processed/adjacency_matrix_not_directed_48_7_categories_US.csv"
+GOWALLA_ADJACENCY_WEEK_FILENAME_US="gowalla/processed/adjacency_matrix_weekday_not_directed_48_7_categories_US.csv"
+GOWALLA_ADJACENCY_WEEKEND_FILENAME_US="gowalla/processed/adjacency_matrix_weekend_not_directed_48_7_categories_US.csv"
+GOWALLA_TEMPORAL_FILENAME_US="gowalla/processed/features_matrix_not_directed_48_7_categories_US.csv"
+GOWALLA_TEMPORAL_WEEK_FILENAME_US="gowalla/processed/features_matrix_weekday_not_directed_48_7_categories_US.csv"
+GOWALLA_TEMPORAL_WEEKEND_FILENAME_US="gowalla/processed/features_matrix_weekend_not_directed_48_7_categories_US.csv"
+GOWALLA_DISTANCE_FILENAME_US="gowalla/processed/distance_matrix_not_directed_48_7_categories_US.csv"
+GOWALLA_DISTANCE_WEEK_FILENAME_US="gowalla/processed/distance_matrix_weekday_not_directed_48_7_categories_US.csv"
+GOWALLA_DISTANCE_WEEKEND_FILENAME_US="gowalla/processed/distance_matrix_weekend_not_directed_48_7_categories_US.csv"
+GOWALLA_DURATION_FILENAME_US="gowalla/processed/duration_matrix_not_directed_48_7_categories_US.csv"
+GOWALLA_DURATION_WEEK_FILENAME_US="gowalla/processed/duration_matrix_weekday_not_directed_48_7_categories_US.csv"
+GOWALLA_DURATION_WEEKEND_FILENAME_US="gowalla/processed/duration_matrix_weekend_not_directed_48_7_categories_US.csv"
 
 # user tracking
 # USER_TRACKING_BASE_DIR="/media/claudio/Data/backup_win_hd/Downloads/doutorado/users_steps_output/"
@@ -182,9 +188,9 @@ MATRIX_GENERATION_FOR_POI_CATEGORIZATION_CONFIG='{
           "different_venues":"yes",
           "max_time_between_records": "",
           "top_users":"40000",
-          "directed":"yes",
+          "directed":"no",
           "dataset_name":"gowalla",
-          "pattern_matrices":"no",
+          "pattern_matrices":"yes",
           "base":"base",
           "categories_type":"7_categories"
           }'

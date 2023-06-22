@@ -69,6 +69,7 @@ class MatrixGenerationForPoiCategorizationDomain:
                                base,
                                files_names,
                                differemt_venues, personal_features_matrix, hour48, directed, max_time_between_records):
+        print("entrou\n")
         """
         :param user_checkin:
         :param datetime_column:
@@ -86,14 +87,17 @@ class MatrixGenerationForPoiCategorizationDomain:
         latitude_list = user_checkin[latitude_column].tolist()
         longitude_list = user_checkin[longitude_column].tolist()
 
-        user_checkin[category_column] = np.array([self.poi_categorization_configuration.GOWALLA_8_CATEGORIES_TO_INT[i] for i in user_checkin['poi_resulting'].tolist()])
-
+        # user_checkin[category_column] = np.array([self.poi_categorization_configuration.GOWALLA_8_CATEGORIES_TO_INT[i] for i in user_checkin['poi_resulting'].tolist()])
+        # print(user_checkin)
+        user_checkin[category_column] = np.array([self.poi_categorization_configuration.GOWALLA_8_CATEGORIES_TO_INT[i] for i in user_checkin['category'].tolist()])
+        
         # matrices initialization
         visited_location_ids = user_checkin[locationid_column].tolist()
         visited_location_ids_real = []
         n_pois = len(user_checkin[locationid_column].unique().tolist())
         adjacency_matrix = [[0 for i in range(n_pois)] for j in range(n_pois)]
         adjacency_weekday_matrix = [[0 for i in range(n_pois)] for j in range(n_pois)]
+        print("passou\n")
         adjacency_weekend_matrix = [[0 for i in range(n_pois)] for j in range(n_pois)]
         temporal_weekday_matrix = [[0 for i in range(24)] for j in range(n_pois)]
         temporal_weekend_matrix = [[0 for i in range(24)] for j in range(n_pois)]
@@ -344,7 +348,6 @@ class MatrixGenerationForPoiCategorizationDomain:
         if self.count_usuarios > self.anterior + 100:
             self.anterior = self.count_usuarios
             print("Usuários: ", self.count_usuarios)
-
         return pd.DataFrame({'adjacency': ['vazio'], 'adjacency_weekday': ['vazio'],
                                  'adjacency_weekend': ['vazio'], 'temporal': ['vazio'],
                                  'distance': ['vazio'], 'duration': ['vazio'],
@@ -410,7 +413,6 @@ class MatrixGenerationForPoiCategorizationDomain:
         :param directed:
         :return: adjacency, temporal, and path matrices
         """
-
 
         user_checkin = user_checkin.sort_values(by=[datetime_column]).drop_duplicates()
         user_checkin = user_checkin.head(self.max_events)
@@ -483,8 +485,8 @@ class MatrixGenerationForPoiCategorizationDomain:
 
             categories_list[placeids_int[atual]] = categories[atual]
 
-        adjacency_matrix, features_matrix, categories_list = self.remove_gpr_gps_pois_that_dont_have_categories(
-            categories_list, adjacency_matrix, distance_matrix)
+        # adjacency_matrix, features_matrix, categories_list = self.remove_gpr_gps_pois_that_dont_have_categories(
+        #     categories_list, adjacency_matrix, distance_matrix)
 
         #distance_matrix = self._summarize_categories_distance_matrix(distance_matrix)
 
@@ -492,7 +494,7 @@ class MatrixGenerationForPoiCategorizationDomain:
 
         # if len(pd.Series(categories_list).unique().tolist()) < min_categories:
         if len(adjacency_matrix) < 2:
-            print("Usuário com poucas categorias diferentes visitadas")
+            print("Usuário com poucas categorias diferentes visitadas 2")
             return pd.DataFrame({'adjacency': ['vazio'],
                                  'distance': ['vazio'],
                                  'user_poi': ['vazio'],
@@ -781,7 +783,7 @@ class MatrixGenerationForPoiCategorizationDomain:
         print(users_checkin)
         users_checkin = users_checkin.dropna(subset=[userid_column, category_column, locationid_column, datetime_column])
         users_checkin = users_checkin.query(category_column + " != ''")
-        print(users_checkin.drop_duplicates(subset=['id', 'poi_id'])['poi_resulting'].value_counts())
+        # print(users_checkin.drop_duplicates(subset=['id', 'poi_id'])['poi_resulting'].value_counts())
         #ids = users_checkin.groupby(userid_column).count().sort_values(locationid_column, ascending=False).reset_index()[userid_column].tolist()
         #ids = users_checkin.groupby('userid').count().reset_index().sample(frac=1, random_state=1)['userid'].tolist()
         #ids = users_checkin[userid_column].unique().tolist()
@@ -869,6 +871,7 @@ class MatrixGenerationForPoiCategorizationDomain:
 
         # shuffle
         users_checkin = users_checkin.sample(frac=1, random_state=1).reset_index(drop=True)
+        del users_checkin['Unnamed: 0']
         print(users_checkin)
         users_checkin = users_checkin.dropna(subset=[userid_column, category_column, locationid_column, datetime_column])
         users_checkin = users_checkin.query(category_column + " != ''")
@@ -908,7 +911,6 @@ class MatrixGenerationForPoiCategorizationDomain:
 
         print(users_checkin)
         print("co", userid_column, locationid_column, category_column)
-
         users_checkin = users_checkin.groupby(userid_column).apply(lambda e: self.generate_gpr_user_matrices(e, e[userid_column].iloc[0],
                                                                                                          datetime_column,
                                                                                                          locationid_column,
@@ -917,7 +919,6 @@ class MatrixGenerationForPoiCategorizationDomain:
                                                                                                          longitude_column,
                                                                                                          dataset_name,
                                                                                                          files_names))
-
         end = time.time()
         print("Duração: ", (end - start)/60)
 

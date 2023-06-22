@@ -108,12 +108,15 @@ class MatrixGenerationForPoiCategorizationJob():
         users_checkin = self.file_extractor.read_csv(users_checkin_filename, dtypes_columns).query(country_column + " == '"+country+"'")
         if category_column == category_name_column:
             categories = users_checkin[category_name_column].tolist()
+            # print(categories)
             categories_int = []
             for i in range(len(categories)):
                 if categories[i] == 'Other':
                     categories_int.append(-1)
                 else:
                     categories_int.append(category_to_int[categories[i]])
+                    # categories_int.append([categories[i]])
+
             category_column = category_column + "_id"
             users_checkin[category_column] = np.array(categories_int)
 
@@ -150,13 +153,15 @@ class MatrixGenerationForPoiCategorizationJob():
         #     max_time_between_records = max_time_between_records + "/"
         if personal_matrix:
             directed = False
-            folder = base_dir + base + "/" + not_directed_folder + country_folder + state_folder + max_time_between_records_dir
+            # folder = base_dir + base + "/" + not_directed_folder + country_folder + state_folder + max_time_between_records_dir
+            folder = 'gowalla/'
             adjacency_matrix_base_filename = folder + adjacency_matrix_base_filename + "not_directed_personal_" + hour_file + categories_type + ".csv"
             features_matrix_base_filename = folder + features_matrix_base_filename + "not_directed_personal_" + hour_file + categories_type + ".csv"
             sequence_matrix_base_filename = folder + sequence_matrix_base_filename + "not_directed_personal_" + hour_file + categories_type + ".csv"
         elif directed == "no":
             directed = False
-            folder = base_dir + different_venues_dir + base + "/" + not_directed_folder + country_folder + state_folder + max_time_between_records_dir
+            # folder = base_dir + different_venues_dir + base + "/" + not_directed_folder + country_folder + state_folder + max_time_between_records_dir
+            folder = 'gowalla/'
             print("Pasta: ", folder)
             self.folder_generation(folder)
             # features_matrix_base_filename = folder+features_matrix_base_filename+"not_directed_"+hour_file+categories_type+"_"+country+".csv"
@@ -184,10 +189,11 @@ class MatrixGenerationForPoiCategorizationJob():
             int_to_locationid_filename = folder + "int_to_locationid_" + categories_type + "_" + country + ".csv"
         else:
             directed = True
-            folder = base_dir + directed_folder
+            # folder = base_dir + directed_folder
+            folder = 'gowalla/'
             adjacency_matrix_base_filename = folder+adjacency_matrix_base_filename + "directed_"+hour_file+categories_type+"_"+country+".csv"
             distance_matrix_base_filename = folder+distance_matrix_base_filename + "directed_"+hour_file+categories_type+"_"+country+".csv"
-            user_poi_vector_base_filename = folder+"user_poi_vector_" + "directed" + categories_type + "_" + country + ".csv"
+            user_poi_vector_base_filename = folder+"user_poi_vector_directed7_categories_United States.csv"
             sequence_matrix_base_filename = folder + sequence_matrix_base_filename + "directed_" + hour_file + categories_type +"_"+country+ ".csv"
 
         print("arquivos: ", folder, adjacency_matrix_base_filename, features_matrix_base_filename)
