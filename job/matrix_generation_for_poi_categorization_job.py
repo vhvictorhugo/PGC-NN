@@ -1,12 +1,8 @@
 import numpy as np
 import pandas as pd
 
-# from domain.user_step_domain import UserStepDomain
-from foundation.abs_classes.job import Job
 from domain.matrix_generation_for_poi_categorization_domain import MatrixGenerationForPoiCategorizationDomain
 from extractor.file_extractor import FileExtractor
-from foundation.configuration.input import Input
-# from foundation.util.general_utils import join_df
 from configuration.poi_categorization_configuration import PoICategorizationConfiguration
 from configuration.matrix_generation_for_poi_categorization_configuration import MatrixGenerationForPoiCategorizationConfiguration
 from loader.poi_categorization_loader import PoiCategorizationLoader
@@ -17,35 +13,31 @@ class MatrixGenerationForPoiCategorizationJob():
     def __init__(self):
         # self.user_step_domain = UserStepDomain()
         self.file_extractor = FileExtractor()
-        self.matrix_generation_for_poi_categorization_domain = MatrixGenerationForPoiCategorizationDomain(Input.get_instance().inputs['dataset_name'])
+        self.matrix_generation_for_poi_categorization_domain = MatrixGenerationForPoiCategorizationDomain("gowalla")
         self.poi_categorization_loader = PoiCategorizationLoader()
         self.poi_categorization_configuration = PoICategorizationConfiguration()
 
     def start(self):
         osm_category_column = None
-        users_checkin_filename = Input.get_instance().inputs['users_checkin_filename']
-
-        base_dir = Input.get_instance().inputs['base_dir']
-        directed_folder = Input.get_instance().inputs['directed_folder']
-        not_directed_folder = Input.get_instance().inputs['not_directed_folder']
-        adjacency_matrix_base_filename = Input.get_instance().inputs['adjacency_matrix_base_filename']
-        features_matrix_base_filename = Input.get_instance().inputs['features_matrix_base_filename']
-        sequence_matrix_base_filename = Input.get_instance().inputs['sequence_matrix_base_filename']
-        distance_matrix_base_filename = Input.get_instance().inputs['distance_matrix_base_filename']
-        duration_matrix_base_filename = Input.get_instance().inputs['duration_matrix_base_filename']
-        pattern_matrices = Input.get_instance().inputs['pattern_matrices']
-        directed = Input.get_instance().inputs['directed']
-        top_users = int(Input.get_instance().inputs['top_users'])
-        dataset_name = Input.get_instance().inputs['dataset_name']
-        categories_type = Input.get_instance().inputs['categories_type']
-        personal_matrix = Input.get_instance().inputs['personal_features_matrix']
-        hour48 = Input.get_instance().inputs['hour48']
-        base = Input.get_instance().inputs['base']
-        country = Input.get_instance().inputs['country']
-        state = Input.get_instance().inputs['state']
-        max_time_between_records = Input.get_instance().inputs['max_time_between_records']
-        differemt_venues = Input.get_instance().inputs['different_venues']
-        print("Dataset: ", Input.get_instance().inputs['dataset_name'])
+        users_checkin_filename = "gowalla/checks.csv"
+        adjacency_matrix_base_filename = "adjacency_matrix"
+        features_matrix_base_filename = "features_matrix"
+        sequence_matrix_base_filename = "sequence_matrix"
+        distance_matrix_base_filename = "distance_matrix"
+        duration_matrix_base_filename = "duration_matrix"
+        pattern_matrices = "yes"
+        directed = "no"
+        top_users = "40000"
+        dataset_name = "gowalla"
+        categories_type = "7_categories"
+        personal_matrix = "no"
+        hour48 = "yes"
+        base = "base"
+        country = "United States"
+        state = ""
+        max_time_between_records = ""
+        differemt_venues = "yes"
+        print("Dataset: ", dataset_name)
 
         convert_country = {'Brazil': 'BR', 'BR': 'BR', 'United States': 'US'}
 

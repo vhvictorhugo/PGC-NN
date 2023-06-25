@@ -69,7 +69,7 @@ class MatrixGenerationForPoiCategorizationDomain:
                                base,
                                files_names,
                                differemt_venues, personal_features_matrix, hour48, directed, max_time_between_records):
-        print("entrou\n")
+        # print("entrou\n")
         """
         :param user_checkin:
         :param datetime_column:
@@ -97,12 +97,14 @@ class MatrixGenerationForPoiCategorizationDomain:
         n_pois = len(user_checkin[locationid_column].unique().tolist())
         adjacency_matrix = [[0 for i in range(n_pois)] for j in range(n_pois)]
         adjacency_weekday_matrix = [[0 for i in range(n_pois)] for j in range(n_pois)]
-        print("passou\n")
         adjacency_weekend_matrix = [[0 for i in range(n_pois)] for j in range(n_pois)]
         temporal_weekday_matrix = [[0 for i in range(24)] for j in range(n_pois)]
         temporal_weekend_matrix = [[0 for i in range(24)] for j in range(n_pois)]
         distance_matrix = [[0 for i in range(n_pois)] for j in range(n_pois)]
+        # print("passou4\n")
         duration_matrix = [[[] for i in range(n_pois)] for j in range(n_pois)]
+        # print(duration_matrix)
+        # print("passou5\n")
         if personal_features_matrix or not hour48:
             temporal_matrix = [[0 for i in range(24)] for j in range(n_pois)]
         else:
@@ -852,7 +854,7 @@ class MatrixGenerationForPoiCategorizationDomain:
                                                                                                          base,
                                                                                                          files_names,
                                                                                                          differemt_venues, personal_features_matrix, hour48, directed, max_time_between_records))
-
+        print("terminou")
         end = time.time()
         print("Duração: ", (end - start)/60)
 

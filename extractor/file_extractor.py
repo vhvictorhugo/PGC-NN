@@ -5,13 +5,9 @@ import os
 from tensorflow.keras.models import load_model
 from scipy import sparse
 
-from foundation.configuration.input import Input
-
 class FileExtractor:
 
     def __init__(self):
-        # self.users_steps_csv_filename = Input.get_instance().inputs['users_steps_filename']
-        # self.ground_truth_filename = Input.get_instance().inputs['ground_truth']
         pass
 
     def read_csv(self, filename, dtypes_columns=None):

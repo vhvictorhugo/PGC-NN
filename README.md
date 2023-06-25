@@ -43,7 +43,7 @@ To execute this project, first you need to create and activate your virtual envi
     * `$ pip install -r requirements.txt`
 
 5. Execute
-    * `$ ./run.sh categorization`
+    * `$ python main.py`
 
 ***
 

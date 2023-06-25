@@ -5,7 +5,6 @@ import tensorflow as tf
 from foundation.abs_classes.job import Job
 from domain.poi_categorization_domain import PoiCategorizationDomain
 from extractor.file_extractor import FileExtractor
-from foundation.configuration.input import Input
 from configuration.poi_categorization_configuration import PoICategorizationConfiguration
 from loader.poi_categorization_loader import PoiCategorizationLoader
 
@@ -13,31 +12,31 @@ class PoiCategorizationJob:
 
     def __init__(self):
         self.file_extractor = FileExtractor()
-        self.poi_categorization_domain = PoiCategorizationDomain(Input.get_instance().inputs['dataset_name'])
+        self.poi_categorization_domain = PoiCategorizationDomain("gowalla")
         self.poi_categorization_loader = PoiCategorizationLoader()
         self.poi_categorization_configuration = PoICategorizationConfiguration()
 
     def start(self):
-        base_dir = Input.get_instance().inputs['base_dir']
-        adjacency_matrix_filename = Input.get_instance().inputs['adjacency_matrix_filename']
-        adjacency_matrix_week_filename = Input.get_instance().inputs['adjacency_matrix_week_filename']
-        adjacency_matrix_weekend_filename = Input.get_instance().inputs['adjacency_matrix_weekend_filename']
-        graph_type = Input.get_instance().inputs['graph_type']
-        temporal_matrix_filename = Input.get_instance().inputs['temporal_matrix_filename']
-        temporal_matrix_week_filename = Input.get_instance().inputs['temporal_matrix_week_filename']
-        temporal_matrix_weekend_filename = Input.get_instance().inputs['temporal_matrix_weekend_filename']
-        distance_matrix_filename = Input.get_instance().inputs['distance_matrix_filename']
-        duration_matrix_filename = Input.get_instance().inputs['duration_matrix_filename']
-        dataset_name = Input.get_instance().inputs['dataset_name']
-        base = Input.get_instance().inputs['base']
-        categories_type = Input.get_instance().inputs['categories_type']
-        location_location_filename = Input.get_instance().inputs['location_location_filename']
-        location_time_filename = Input.get_instance().inputs['location_time_filename']
-        int_to_locationid_filename = Input.get_instance().inputs['int_to_locationid_filename']
-        country = Input.get_instance().inputs['country']
-        state = Input.get_instance().inputs['state']
-        version = Input.get_instance().inputs['version']
-        print("Dataset: ", Input.get_instance().inputs['dataset_name'])
+        base_dir = "gowalla/processed/"
+        adjacency_matrix_filename = "gowalla/processed/adjacency_matrix_not_directed_48_7_categories_US.csv"
+        adjacency_matrix_week_filename = "gowalla/processed/adjacency_matrix_weekday_not_directed_48_7_categories_US.csv"
+        adjacency_matrix_weekend_filename = "gowalla/processed/adjacency_matrix_weekend_not_directed_48_7_categories_US.csv"
+        graph_type = "not_directed"
+        temporal_matrix_filename = "gowalla/processed/features_matrix_not_directed_48_7_categories_US.csv"
+        temporal_matrix_week_filename = "gowalla/processed/features_matrix_weekday_not_directed_48_7_categories_US.csv"
+        temporal_matrix_weekend_filename = "gowalla/processed/features_matrix_weekend_not_directed_48_7_categories_US.csv"
+        distance_matrix_filename = "gowalla/processed/distance_matrix_not_directed_48_7_categories_US.csv"
+        duration_matrix_filename = "gowalla/processed/duration_matrix_not_directed_48_7_categories_US.csv"
+        dataset_name = "gowalla"
+        base = "base"
+        categories_type = "7_categories"
+        location_location_filename = "gowalla/processed/location_location_pmi_matrix_7_categories_US.npz"
+        location_time_filename = "gowalla/processed/location_time_pmi_matrix_7_categories_US.csv"
+        int_to_locationid_filename = "gowalla/processed/int_to_locationid_7_categories_US.csv"
+        country = "US"
+        state = "TEXAS"
+        version = "normal"
+        print("Dataset: ", dataset_name)
 
         max_size_matrices = self.poi_categorization_configuration.MAX_SIZE_MATRICES[1]
         max_size_paths = self.poi_categorization_configuration.MINIMUM_RECORDS[1]
