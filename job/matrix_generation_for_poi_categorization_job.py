@@ -19,7 +19,7 @@ class MatrixGenerationForPoiCategorizationJob():
 
     def start(self):
         osm_category_column = None
-        users_checkin_filename = "gowalla/checks.csv"
+        users_checkin_filename = "gowalla/checkins.csv"
         adjacency_matrix_base_filename = "adjacency_matrix"
         features_matrix_base_filename = "features_matrix"
         sequence_matrix_base_filename = "sequence_matrix"
@@ -100,7 +100,6 @@ class MatrixGenerationForPoiCategorizationJob():
         users_checkin = self.file_extractor.read_csv(users_checkin_filename, dtypes_columns).query(country_column + " == '"+country+"'")
         if category_column == category_name_column:
             categories = users_checkin[category_name_column].tolist()
-            # print(categories)
             categories_int = []
             for i in range(len(categories)):
                 if categories[i] == 'Other':
@@ -111,6 +110,7 @@ class MatrixGenerationForPoiCategorizationJob():
 
             category_column = category_column + "_id"
             users_checkin[category_column] = np.array(categories_int)
+            print("\n\n", users_checkin[category_column], "\n\n", users_checkin[category_column].unique() )
 
         if state != "":
             users_checkin = users_checkin.query(state_column + " == '" + state + "'")

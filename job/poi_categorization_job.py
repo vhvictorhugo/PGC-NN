@@ -29,9 +29,9 @@ class PoiCategorizationJob:
         dataset_name = "gowalla"
         base = "base"
         categories_type = "7_categories"
-        location_location_filename = "gowalla/processed/location_location_pmi_matrix_7_categories_US.npz"
-        location_time_filename = "gowalla/processed/location_time_pmi_matrix_7_categories_US.csv"
-        int_to_locationid_filename = "gowalla/processed/int_to_locationid_7_categories_US.csv"
+        location_location_filename = "gowalla/location_location_pmi_matrix_7_categories_US.npz"
+        location_time_filename = "gowalla/location_time_pmi_matrix_7_categories_US.csv"
+        int_to_locationid_filename = "gowalla/int_to_locationid_7_categories_US.csv"
         country = "US"
         state = "TEXAS"
         version = "normal"
@@ -69,9 +69,9 @@ class PoiCategorizationJob:
         max_time_between_records_dir = ""
 
         if len(state) > 0:
-            base_dir = base_dir + base + graph_type + "/" + country_dir + state + "/" + max_time_between_records_dir
+            base_dir = "gowalla/processed/"
         else:
-            base_dir = base_dir + base + graph_type + "/" + country_dir + max_time_between_records_dir
+            base_dir = "gowalla/processed/"
 
         if len(base) > 0:
             base = True

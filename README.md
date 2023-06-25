@@ -8,11 +8,9 @@ This approach is a piece of a more complete work [1], removed from the original 
 
 ## Data
 
-The required data is in folder processed_data, maded by processing_data.ipynb notebook. This notebook do pre-processing to the original data (more info in [1]), limiting the number of users to 100. This decision was taked to favor perfomance.
+To generate the matrices specified in [1], see details in [matrix generation documentation](docs/matrix_generation.md).
 
-Whereas Deep Learning performance better with large dataframes, in real tests, may be necessary execute with more data.
-
-<span style="color: red;">**OBS: The Data was removed to not overload the repository, but [1] contain a detailed explanation about them.**</span>
+<span style="color: red;">**OBS: The Data was removed to not overload the repository.**</span>
 
 ## Requirements and Execution
 
@@ -25,6 +23,8 @@ Whereas Deep Learning performance better with large dataframes, in real tests, m
 
 ### Execution
 
+After generate the matrices, you need to run 'processing_data.ipynb' notebook in 'gowalla/processed/' folder to reduce the original dataset and favor tests execution. You will need also to comment line 12 and uncomment line 11 in 'main.py' file.
+
 To execute this project, first you need to create and activate your virtual environment. The step-by-step is:
 
 <span style="color: red;">**OBS: The follow step-by-step was created to use in Linux Operation System.**</span>
@@ -32,6 +32,7 @@ To execute this project, first you need to create and activate your virtual envi
 1. Create your virtual environment
     * `$ virtualenv myenv`
     * Replace 'myenv' with a name of your choice
+    * Execute this command only at the first time
 
 2. Activate the virtual environment
     * `$ source myenv/bin/activate`

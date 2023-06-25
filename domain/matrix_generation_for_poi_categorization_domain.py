@@ -89,8 +89,8 @@ class MatrixGenerationForPoiCategorizationDomain:
 
         # user_checkin[category_column] = np.array([self.poi_categorization_configuration.GOWALLA_8_CATEGORIES_TO_INT[i] for i in user_checkin['poi_resulting'].tolist()])
         # print(user_checkin)
-        user_checkin[category_column] = np.array([self.poi_categorization_configuration.GOWALLA_8_CATEGORIES_TO_INT[i] for i in user_checkin['category'].tolist()])
-        
+        user_checkin[category_column] = np.array([self.poi_categorization_configuration.GOWALLA_7_CATEGORIES_TO_INT[i] for i in user_checkin['category'].tolist()])
+                
         # matrices initialization
         visited_location_ids = user_checkin[locationid_column].tolist()
         visited_location_ids_real = []
