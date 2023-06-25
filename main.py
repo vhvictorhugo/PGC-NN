@@ -8,7 +8,7 @@ from job.matrix_generation_for_poi_categorization_job import MatrixGenerationFor
 
 
 if __name__ == "__main__":
-    # job = PoiCategorizationJob()
-    job = MatrixGenerationForPoiCategorizationJob()
+    job = PoiCategorizationJob()
+    # job = MatrixGenerationForPoiCategorizationJob()
     
     job.start()
