@@ -15,13 +15,3 @@ def points_distance(point_0, point_1):
     result = result * 6371000
     distance = result[0][1]
     return distance
-
-def centroid(latitudes, longitudes):
-    lenght = len(latitudes)
-    sum_lat = sum(latitudes)
-    sum_long = sum(longitudes)
-
-    latitude = sum_lat / lenght
-    longitude = sum_long / lenght
-
-    return latitude, longitude

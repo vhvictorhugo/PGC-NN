@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
-from foundation.abs_classes.job import Job
 from domain.poi_categorization_domain import PoiCategorizationDomain
 from extractor.file_extractor import FileExtractor
 from configuration.poi_categorization_configuration import PoICategorizationConfiguration
