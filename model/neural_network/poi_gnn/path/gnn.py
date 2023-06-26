@@ -66,19 +66,9 @@ class AdaptativeGCN(Layer):
 
     def get_config(self):
         config = {
-            # 'bias_regularizer': self.bias_regularizer,
-            # 'bias_constraint': self.bias_constraint,
                 'main_layer': self.main_layer,
                 'secondary_layer': self.secondary_layer,
                 'main2_layer': self.main2_layer
-                # 'main_use_bias': self.main_use_bias,
-                # 'secondary_use_bias': self.secondary_use_bias,
-                # 'main_activation': self.main_activation,
-                # 'secondary_activation': self.secondary_activation,
-                # 'bias_initializer': self.bias_initializer,
-                # 'kernel_initializer': self.kernel_initializer,
-                # 'kernel_regularizer': self.kernel_regularizer,
-                # 'kernel_constraint': self.kernel_constraint,
                 }
         base_config = super().get_config()
         return dict(list(base_config.items()) + list(config.items()))
@@ -137,11 +127,6 @@ class AdaptativeGCN(Layer):
         first = (self.v_bias_out2) * main
         second = (self.v_bias_out) * main_secondary
 
-        # first = (average_lambda + tf.keras.activations.sigmoid(self.v_bias_out2)) * main
-        # #tf.print("primeiro", (average_lambda + tf.keras.activations.sigmoid(self.v_bias_out2)))
-        # second = ((1 - average_lambda) + tf.keras.activations.sigmoid(self.v_bias_out)) * main_secondary
-        # #tf.print("segundo", ((1 - average_lambda) + tf.keras.activations.sigmoid(self.v_bias_out)))
-
         output = K.stack([first, second], axis=-1)
         output = K.mean(output, axis=-1)
 
@@ -178,21 +163,6 @@ class GNNPath:
         Path_weekend_input = Input((self.max_size_matrices, self.max_size_sequence))
         Distance_weekend_input = Input((self.max_size_matrices,self.max_size_matrices))
         Duration_weekend_input = Input((self.max_size_matrices,self.max_size_matrices))
-        # kernel_channels = 2
-
-        # x2 = ARMAConv(220,
-        #          iterations=iterations,
-        #          order=order,
-        #          share_weights=share_weights,
-        #          dropout_rate=dropout_skip,
-        #          activation='elu',
-        #          gcn_activation='elu',
-        #          kernel_regularizer=l2(l2_reg))([S_input, A_input])
-        # x2 = Dropout(0.5)(x2)
-        #
-
-        #out = AdaptativeGCN(main_channel=self.classes, secondary_channel=180)([Temporal_input, A_input, Path_input])
-
         out_temporal = ARMAConv(20, activation='elu')([Temporal_input, A_input])
         out_temporal = Dropout(0.5)(out_temporal)
         out_temporal = ARMAConv(self.classes,
@@ -213,4 +183,3 @@ class GNNPath:
         model = Model(inputs=[A_input, Temporal_input, Path_input, Distance_input, Duration_input], outputs=[out])
 
         return model
-

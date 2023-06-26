@@ -33,7 +33,7 @@ class PoiCategorizationJob:
         location_time_filename = "gowalla/location_time_pmi_matrix_7_categories_US.csv"
         int_to_locationid_filename = "gowalla/int_to_locationid_7_categories_US.csv"
         country = "US"
-        state = "TEXAS"
+        state = "Texas"
         version = "normal"
         print("Dataset: ", dataset_name)
 
@@ -77,21 +77,6 @@ class PoiCategorizationJob:
             base = True
         else:
             base = False
-
-        adjacency_matrix_filename = adjacency_matrix_filename
-        temporal_matrix_filename = temporal_matrix_filename
-        distance_matrix_filename = distance_matrix_filename
-        duration_matrix_filename = duration_matrix_filename
-        adjacency_matrix_week_filename = adjacency_matrix_week_filename
-        temporal_matrix_week_filename = temporal_matrix_week_filename
-        adjacency_matrix_weekend_filename = adjacency_matrix_weekend_filename
-        temporal_matrix_weekend_filename = temporal_matrix_weekend_filename
-
-        self.files_verification(country, state, adjacency_matrix_filename, temporal_matrix_filename,
-                           adjacency_matrix_week_filename, temporal_matrix_week_filename,
-                           adjacency_matrix_weekend_filename, temporal_matrix_weekend_filename,
-                           distance_matrix_filename,
-                           duration_matrix_filename)
 
         # normal matrices
         adjacency_df, temporal_df, distance_df, duration_df = self.poi_categorization_domain.\
@@ -194,49 +179,6 @@ class PoiCategorizationJob:
         print("Usuarios processados: ", usuarios)
         print("Tamanho máximo de matriz: ", max_size_matrices)
         print("Quantidade mínima de registros: ", max_size_paths)
-
-    def files_verification(self, country, state, adjacency_matrix_filename, temporal_matrix_filename,
-                           adjacency_matrix_week_filename, temporal_matrix_week_filename,
-                           adjacency_matrix_weekend_filename, temporal_matrix_weekend_filename,
-                           distance_matrix_filename,
-                           duration_matrix_filename):
-
-        if country not in adjacency_matrix_filename or country not in temporal_matrix_filename \
-                or country not in adjacency_matrix_week_filename or country not in adjacency_matrix_weekend_filename or country not in \
-                distance_matrix_filename:
-
-            print("matrizes diferentes do país")
-            print(adjacency_matrix_filename)
-            print(temporal_matrix_filename)
-            print(adjacency_matrix_week_filename)
-            print(temporal_matrix_week_filename)
-            print(adjacency_matrix_weekend_filename)
-            print(temporal_matrix_weekend_filename)
-
-        if state not in adjacency_matrix_filename or state not in temporal_matrix_filename \
-                or state not in \
-                adjacency_matrix_week_filename or state not in adjacency_matrix_weekend_filename or state not in \
-                temporal_matrix_week_filename or state not in temporal_matrix_weekend_filename:
-            print("matrizes diferentes do estado")
-            print(adjacency_matrix_filename)
-            print(temporal_matrix_filename)
-            print(adjacency_matrix_week_filename)
-            print(temporal_matrix_week_filename)
-            print(adjacency_matrix_weekend_filename)
-            print(temporal_matrix_weekend_filename)
-            # raise
-
-        if 'week' not in adjacency_matrix_week_filename or 'week' not in temporal_matrix_week_filename:
-            print("matrizes diferentes de week")
-            print(adjacency_matrix_week_filename)
-            print(temporal_matrix_week_filename)
-            raise
-
-        if 'weekend' not in adjacency_matrix_weekend_filename or 'weekend' not in temporal_matrix_weekend_filename:
-            print("matrizes diferentes weekend")
-            print(adjacency_matrix_weekend_filename)
-            print(temporal_matrix_weekend_filename)
-            raise
 
     def matrices_verification(self, df_list):
 

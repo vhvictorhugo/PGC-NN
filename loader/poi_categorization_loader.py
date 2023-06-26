@@ -98,7 +98,6 @@ class PoiCategorizationLoader:
                     recall_column_data.append(np.nan)
             recall_dict[recall_column] = recall_column_data
 
-            # print("final: ", new_dict)
         precision = pd.DataFrame(precision_dict)
         print("Métricas precision: \n", precision)
         output_dir = output_dir + str(n_folds) + "_folds/" + str(n_replications) + "_replications/"

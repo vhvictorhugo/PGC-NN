@@ -16,7 +16,6 @@ class FileExtractor:
             print("arq", filename)
             df = pd.read_csv(filename)
         else:
-            #print(pd.read_csv(filename).iloc[30551])
             df = pd.read_csv(filename, dtype=dtypes_columns, encoding='utf-8')
 
         return df.sample(frac=1, random_state=3)

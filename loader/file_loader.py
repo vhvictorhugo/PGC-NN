@@ -9,7 +9,6 @@ class FileLoader:
         pass
 
     def save_df_to_csv(self, df, filename, mode='w'):
-        #filename = DataSources.FILES_DIRECTORY.get_value() + filename
         if os.path.exists(filename):
             header = False
         else:

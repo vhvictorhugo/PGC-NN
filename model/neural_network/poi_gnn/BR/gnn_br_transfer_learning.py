@@ -67,19 +67,9 @@ class AdaptativeGCN(Layer):
 
     def get_config(self):
         config = {
-            # 'bias_regularizer': self.bias_regularizer,
-            # 'bias_constraint': self.bias_constraint,
                 'main_layer': self.main_layer,
                 'secondary_layer': self.secondary_layer,
                 'main2_layer': self.main2_layer
-                # 'main_use_bias': self.main_use_bias,
-                # 'secondary_use_bias': self.secondary_use_bias,
-                # 'main_activation': self.main_activation,
-                # 'secondary_activation': self.secondary_activation,
-                # 'bias_initializer': self.bias_initializer,
-                # 'kernel_initializer': self.kernel_initializer,
-                # 'kernel_regularizer': self.kernel_regularizer,
-                # 'kernel_constraint': self.kernel_constraint,
                 }
         base_config = super().get_config()
         return dict(list(base_config.items()) + list(config.items()))
@@ -138,11 +128,6 @@ class AdaptativeGCN(Layer):
         first = (self.v_bias_out2) * main
         second = (self.v_bias_out) * main_secondary
 
-        # first = (average_lambda + tf.keras.activations.sigmoid(self.v_bias_out2)) * main
-        # #tf.print("primeiro", (average_lambda + tf.keras.activations.sigmoid(self.v_bias_out2)))
-        # second = ((1 - average_lambda) + tf.keras.activations.sigmoid(self.v_bias_out)) * main_secondary
-        # #tf.print("segundo", ((1 - average_lambda) + tf.keras.activations.sigmoid(self.v_bias_out)))
-
         output = K.stack([first, second], axis=-1)
         output = K.mean(output, axis=-1)
 
@@ -180,11 +165,6 @@ class GNNBR:
         Duration_weekend_input = Input((self.max_size_matrices, self.max_size_matrices))
         Location_time_input = Input((self.max_size_matrices, self.features_num_columns))
         Location_location_input = Input((self.max_size_matrices, self.max_size_matrices))
-        # kernel_channels = 2
-
-        # base_model = tf.keras.models.load_model("/home/claudio/Documentos/pycharm_projects/poi_gnn/output/poi_categorization_job/base/not_directed/gowalla/US/TX/7_categories/5_folds/1_replications/")
-        # out = base_model(inputs=[A_input, A_week_input, A_weekend_input, Temporal_input, Temporal_week_input, Temporal_weekend_input, Distance_input, Duration_input, Location_time_input, Location_location_input])
-
         out_temporal = ARMAConv(20, activation='elu',
                                 gcn_activation='gelu', share_weights=share_weights,
                                 dropout_rate=dropout_skip)([Temporal_input, A_input])
@@ -220,9 +200,6 @@ class GNNBR:
 
         out_location = ARMAConv(20, activation='elu',
                                 gcn_activation='gelu')([Location_time_input, Location_location_input])
-        # out_location = Dropout(0.3)(out_location)
-        # out_location = ARMAConv(self.classes,
-        #                         activation="softmax")([out_duration, Location_location_input])
 
         out_location_time = Dense(40, activation='relu')(Location_time_input)
         out_location_time = Dense(self.classes, activation='softmax')(out_location_time)
@@ -250,7 +227,6 @@ class GNNBR:
         out_dense = tf.Variable(2.) * out_location_time + tf.Variable(1.) * out_location_location
         out_dense = Dense(self.classes, activation='softmax')(out_dense)
 
-        # out = tf.Variable(2.) * out_location_time + tf.Variable(2.) * out_location_location
         out_gnn = tf.Variable(1.) * out_temporal + tf.Variable(1.) * out_week_temporal + tf.Variable(
             1.) * out_weekend_temporal + tf.Variable(1.) * out_distance + tf.Variable(1.) * out_duration
         out_gnn = Dense(self.classes, activation='softmax')(out_gnn)

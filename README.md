@@ -45,6 +45,7 @@ To execute this project, first you need to create and activate your virtual envi
 
 5. Execute
     * `$ python main.py`
+    * see [info](docs/info.md) about pgc-nn execution (pt-br)
 
 ***
 

@@ -261,14 +261,6 @@ class PoiCategorizationDomain:
 
                 replication_level = 3
 
-
-            # for j in range(len(augmentation_cateogories.keys())):
-            #
-            #     key = list(augmentation_cateogories.keys())[j]
-            #     if key in category:
-            #         if augmentation_cateogories[key] > replication_level:
-            #             replication_level = augmentation_cateogories[key]
-
             # augmentation
             adjacency_non_zero_indices = np.nonzero(np.array(adjacency_matrix))
             features_non_zero_indices = np.nonzero(np.array(features_matrix))
@@ -279,28 +271,15 @@ class PoiCategorizationDomain:
                 for j in range(replication_level):
                     aux.append(category)
                     random_int = np.random.randint(low=2, high=10)
-                    # aux2.append(self.add_non_zero_indices(matrix=adjacency_matrix,
-                    #                                       non_zero_indices=adjacency_non_zero_indices, value=random_int))
-                    # aux3.append(self.add_non_zero_indices(matrix=features_matrix,
-                    #                                       non_zero_indices=features_non_zero_indices, value=random_int))
-
                     aux2.append(np.random.permutation(np.array(adjacency_matrix)).tolist())
                     aux3.append(np.random.permutation(np.array(features_matrix)).tolist())
 
-
-                # for i in range(replication_level):
-                #     aux.append(category)
-                #     aux2.append(adjacency_matrix)
-                #     aux3.append(features_matrix)
-                #print("adj append", aux2)
                 aux.append(category)
                 category = aux
                 aux2.append(adjacency_matrix)
-                #print("adj append2", aux2)
                 adjacency_matrix = aux2
                 aux3.append(features_matrix)
                 features_matrix = aux3
-                #print("adj final: ", adjacency_matrix)
                 if user_metrics is not None:
                     user_metric = user_metric * replication_level
 
@@ -422,10 +401,6 @@ class PoiCategorizationDomain:
             user_visited = visited_location_ids[i]
             user_visited = json.loads(user_visited)
             user_visited = np.array(user_visited)
-            # if user_matrices.shape[0] < max_size_matrices:
-            #     remove_users_ids.append(user_id)
-            #     remove += 1
-            #     continue
             size = user_matrices.shape[0]
             if size > maior:
                 maior = size
@@ -572,14 +547,7 @@ class PoiCategorizationDomain:
         max_user = -1
         selected_users = []
         for i in range(len(ids)):
-            # if i >= 1000:
-            #     continue
-            #print("indice: ", i)
             user_id = ids[i]
-            # if user_id not in users_metrics_ids:
-            #     continue
-            #     print("diferentes", user_id)
-            #     remove_users_ids.append(user_id)
 
             user_matrix = matrix_df[i]
             user_category = category_df[i]
@@ -637,10 +605,6 @@ class PoiCategorizationDomain:
                     user_matrix = sk.layers.ARMAConv.preprocess(user_matrix)
                 elif model_name == "diff":
                     user_matrix = sk.layers.DiffusionConv.preprocess(user_matrix)
-
-            # if len(pd.Series(user_category).unique().tolist()) < num_categories - 1:
-            #     print("parou")
-            #     continue
 
             """feature"""
             user_temporal_matrix = temporal_df[i]
@@ -730,7 +694,6 @@ class PoiCategorizationDomain:
             return (matrices_list, users_categories, temporal_matrices_list)
 
     def generate_nodes_ids(self, rows, cols):
-
 
         ids = []
         for i in range(rows):
@@ -906,15 +869,6 @@ class PoiCategorizationDomain:
             location_time_list_train = []
             location_location_list_train = []
 
-        # adjacency_list_train, user_categories_train, temporal_list_train, distance_list_train, duration_list_train = self.\
-        #     preprocess_adjacency_matrix_train(k,
-        #                                       model_name,
-        #                                       adjacency_list_train,
-        #                                       user_categories_train,
-        #                                       temporal_list_train,
-        #                                       distance_list_train, duration_list_train)
-
-
         adjacency_list_test = adjacency_list[test_indexes]
         user_categories_test = user_categories[test_indexes]
         temporal_list_test = temporal_list[test_indexes]
@@ -929,15 +883,6 @@ class PoiCategorizationDomain:
             duration_list_test = []
             location_time_list_test = []
             location_location_list_test = []
-
-        # adjacency_list_test, user_categories_test, temporal_list_test, distance_list_test, duration_list_test = self.\
-        #     preprocess_adjacency_matrix_test(k,
-        #                                      model_name,
-        #                                      adjacency_list_test,
-        #                                      user_categories_test,
-        #                                      temporal_list_test,
-        #                                      distance_list_test,
-        #                                      duration_list_test)
 
         flatten_train_category = []
         for categories_list in user_categories_train:
@@ -971,19 +916,12 @@ class PoiCategorizationDomain:
                     location_time_list_train, location_location_list_train, adjacency_list_test, user_categories_test, temporal_list_test, distance_list_test,
                     duration_list_test, location_time_list_test, location_location_list_test), class_weight
         else:
-            print("retornoo")
+            # print("retornoo")
             return (adjacency_list_train, user_categories_train, temporal_list_train,
                     adjacency_list_test, user_categories_test, temporal_list_test), class_weight
 
 
     def _preprocess_features(self, features):
-        # print("antes: ", features[0])
-        # rowsum = np.array(features.sum(1))
-        # r_inv = np.power(rowsum, 1).flatten()
-        # r_inv[np.isinf(r_inv)] = 0.
-        # r_mat_inv = sp.diags(r_inv)
-        # features = r_mat_inv.dot(features)
-        # print("depois: ", features[0])
         features = normalize(features, axis=1)
         return features
 
@@ -1064,9 +1002,6 @@ class PoiCategorizationDomain:
                                  version="normal",
                                  model=None):
 
-
-        #print("entradas: ", adjacency_train.shape, features_train.shape, y_train.shape)
-        #print("enstrada test: ", adjacency_test.shape, features_test.shape, y_test.shape)
         adjacency_train, y_train, temporal_train, distance_train, duration_train,  location_time_train, location_location_train,\
         adjacency_test, y_test, temporal_test, distance_test, duration_test, location_time_test, location_location_test = fold
         adjacency_week_train, y_train_week, temporal_train_week,  \
@@ -1103,19 +1038,12 @@ class PoiCategorizationDomain:
             elif version == "PATH":
                 print("PATH")
                 model = GNNPath(num_classes, max_size, max_size_sequence,
-                            self.features_num_columns).build(seed=seed)
-        elif country == 'US':
-            if base:
-                print("dentro")
-                model = GNNUS_BaseModel(num_classes, max_size, max_size_sequence,
-                              self.features_num_columns).build(seed=seed)
-            else:
-                model = GNNUS_BaseModel(num_classes, max_size, max_size_sequence,
                         self.features_num_columns).build(seed=seed)
-        if country == 'US':
-            batch = max_size * 2
-        elif country == 'BR' or country == 'Brazil':
             batch = 1
+        elif country == 'US':
+            model = GNNUS_BaseModel(num_classes, max_size, max_size_sequence,
+                        self.features_num_columns).build(seed=seed)
+            batch = max_size * 2            
 
         print("Tamanho do batch: ", batch)
 
@@ -1156,7 +1084,6 @@ class PoiCategorizationDomain:
                        )
 
         h = hi.history
-        #print("summary: ", model.summary())
         y_predict_location = model.predict(input_test,
                                            batch_size=batch)
 
@@ -1212,13 +1139,4 @@ class PoiCategorizationDomain:
         scaler.fit(matrix_1)
         matrix_1 = scaler.transform(matrix_1).transpose()
 
-
-        # min_value = matrix.min()
-        # max_value = matrix.max()
-        #
-        # matrix = (matrix-min_value)/(max_value-min_value)
-        # matrix += matrix_1
-
-        return matrix_1
-
-        
+        return matrix_1        

@@ -46,9 +46,6 @@ def top_k_rows(data, k):
         row_sum.append([np.sum(data[i]), i])
 
     row_sum = sorted(row_sum, reverse=True, key=lambda e:e[0])
-    # if len(row_sum) > k:
-    # if row_sum[k][0] < 4:
-    #     print("ola")
     row_sum = row_sum[:k]
 
     row_sum = [e[1] for e in row_sum]
@@ -76,7 +73,6 @@ def top_k_rows_category(data, k, user_category):
     row_sum = []
     user_unique_categories = {i: 0 for i in pd.Series(user_category).unique().tolist()}
     categories_weights = {0: 1, 1: 1, 2: 4, 3: 6, 4: 3, 5: 3, 6: 7}
-    #categories_weights = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}
     adjusted_row_sum = []
     for i in range(len(data)):
         category = user_category[i]
@@ -85,7 +81,6 @@ def top_k_rows_category(data, k, user_category):
         user_unique_categories[user_category[i]] += 1
 
     row_sum = sorted(row_sum, reverse=True, key=lambda e:e[3])
-    #print("antes: ", row_sum)
     n_rows_to_remove = len(row_sum) - k
     count = 0
 
@@ -103,19 +98,7 @@ def top_k_rows_category(data, k, user_category):
                 count += 1
 
         add = {i: True for i in pd.Series(user_category).unique().tolist()}
-
-    #adjusted_row_sum = sorted(adjusted_row_sum, reverse=True, key=lambda e:e[0])
-
-
-    # if len(row_sum) > k:
-    # if row_sum[k][0] < 4:
-    #     print("ola")
-    #print("Tamanho do row sum: ", len(adjusted_row_sum))
-    #row_sum = row_sum[:k]
-    #print("total: ", adjusted_row_sum)
     adjusted_row_sum = [e[1] for e in adjusted_row_sum]
-
-    #print("ids: ", adjusted_row_sum, " tamanho dos dados: ", len(data))
 
     return np.array(adjusted_row_sum)
 
@@ -134,37 +117,6 @@ def top_k_rows_category_user_tracking(data, k, user_category):
     row_sum = sorted(row_sum, reverse=True, key=lambda e:e[3])
     adjusted_row_sum = row_sum[:k]
     adjusted_row_sum = [i[1] for i in adjusted_row_sum]
-    #print("antes: ", row_sum)
-    # n_rows_to_remove = len(row_sum) - k
-    # count = 0
-    #
-    # add = {i: True for i in pd.Series(user_category).unique().tolist()}
-    # added = []
-    # while count < k:
-    #
-    #     for i in range(len(row_sum)):
-    #         category = row_sum[i][2]
-    #
-    #         if add[category] and i not in added and count < k:
-    #             adjusted_row_sum.append(row_sum[i])
-    #             add[category] = False
-    #             added.append(i)
-    #             count += 1
-    #
-    #     add = {i: True for i in pd.Series(user_category).unique().tolist()}
-    #
-    # #adjusted_row_sum = sorted(adjusted_row_sum, reverse=True, key=lambda e:e[0])
-    #
-    #
-    # # if len(row_sum) > k:
-    # # if row_sum[k][0] < 4:
-    # #     print("ola")
-    # #print("Tamanho do row sum: ", len(adjusted_row_sum))
-    # #row_sum = row_sum[:k]
-    # #print("total: ", adjusted_row_sum)
-    # adjusted_row_sum = [e[1] for e in adjusted_row_sum]
-
-    #print("ids: ", adjusted_row_sum, " tamanho dos dados: ", len(data))
 
     return np.array(adjusted_row_sum)
 
@@ -198,10 +150,6 @@ def from_networkx(g):
 def top_k_rows_centrality(data, k):
 
     g = to_networkx(data)
-#    centrality = nx.eigenvector_centrality(g, max_iter=10000)
-#     centrality = nx.current_flow_betweenness_centrality(g)
-
-    #centrality_list = sorted([(v, float(f"{c:0.2f}")) for v, c in centrality.items()], reverse=True, key=lambda e: e[1])
     nodes_degree = g.degree(list(g.Nodes))
     nodes_degree = sorted(nodes_degree, reverse=True, key= lambda e: e[1])
     idx = [i[0] for i in centrality_list]
@@ -240,8 +188,6 @@ def top_k_rows_order(graph, k):
     new_graph = new_graph[:k]
 
     return np.array(new_graph)
-
-
 
 def filter_data_by_valid_category(user_matrix, user_category, osm_categories):
 
