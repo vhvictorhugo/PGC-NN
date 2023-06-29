@@ -143,7 +143,6 @@ class GNNBR:
         self.max_size_sequence = max_size_sequence
         self.classes = classes
         self.features_num_columns = features_num_columns
-        print("ola", self.max_size_matrices)
     def build(self, seed=None):
         if seed is not None:
             tf.random.set_seed(seed)

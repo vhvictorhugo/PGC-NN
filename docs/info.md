@@ -14,9 +14,6 @@ Itera sobre uma lista de ids (provavelmente IDs de usuários) e realiza as segui
 * Realiza alguns cálculos e transformações nessas matrizes, como redimensionamento e normalização.
   * filtro de usuários com poucos check-ins
 
-* Imprime informações relevantes, como o número de visitas selecionadas, o número de usuários e o 
-número de usuários removidos.
-
 ## Verifica Matrizes
 
 * Classe: `PoiCategorizationJob()`
@@ -44,3 +41,11 @@ Depois são feitas verificações nas matrizes para assegurar que as matrizes te
 `train_and_evaluate_model`
 - conjunto de treinamento é o conjunto de dados de treinamento separado pela validação cruzada
 - conjunto de teste é o conjunto de dados de teste separado pela validação cruzada
+- dados utilizados para teste e treinamento: lista das matrizes dos arquivos gerados pelo pré-processamento
+  - adjacency, temporal, adjacency_week, temporal_week, distance, duration, location_time, location_location
+  - vale lembrar que cada linha na matriz corresponde a um usuário
+  - label: lista de categorias visitadas pelo usuário
+  - saída: prevê essa lista para o conjunto de teste
+    - obs: a saída é uma lista contendo todas as categorias dos usuários, em sequência. Não foi feito
+    um processamento para atribuir a saída na base de dados dos usuários, ou seja, não foi feita a rotulagem
+    da base

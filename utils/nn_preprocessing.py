@@ -192,8 +192,6 @@ def top_k_rows_order(graph, k):
 def filter_data_by_valid_category(user_matrix, user_category, osm_categories):
 
     idx = []
-    print("Tamanho user cate: ",  user_category.shape)
-    print("Tamanho user matr: ", user_matrix.shape)
     for i in range(len(user_category)):
         if user_category[i] == "" or user_category[i] == " ":
             continue
@@ -204,7 +202,6 @@ def filter_data_by_valid_category(user_matrix, user_category, osm_categories):
     idx = np.array(idx)
     if len(idx) == 0:
         return np.array([]), np.array([])
-    print(idx)
     user_matrix = user_matrix[idx[:, None], idx]
     user_category = user_category[idx]
     return user_matrix, user_category

@@ -54,7 +54,7 @@ class PoiCategorizationDomain:
             first_categories = []
             flatten = []
             unique_first_level_categories = list(categories_to_int_osm)
-            print("unicos: ", unique_first_level_categories, type(unique_first_level_categories), unique_first_level_categories[1])
+            print("\nunicos: ", unique_first_level_categories, type(unique_first_level_categories), unique_first_level_categories[1])
             for i in range(len(categories)):
                 user_categories = categories[i]
                 user_first_level_categories = []
@@ -67,7 +67,7 @@ class PoiCategorizationDomain:
                 user_matrix = np.array(user_matrix)
 
                 if inicial != user_matrix.shape[0]:
-                    print("Diferentes matrix: ", inicial, user_matrix.shape[0])
+                    print("\nDiferentes matrix: ", inicial, user_matrix.shape[0])
                 for j in range(len(user_categories)):
                     element = user_categories[j]
                     element = element.replace("[", "").replace("]", "").replace("'", "")
@@ -81,10 +81,10 @@ class PoiCategorizationDomain:
                     user_first_level_categories.append(element)
                 final = len(user_first_level_categories)
                 if inicial != final:
-                    print("Diferentes: ", inicial, final)
+                    print("\nDiferentes: ", inicial, final)
                 flatten = flatten + user_first_level_categories
                 first_categories.append(user_first_level_categories)
-            print("categorias antes: ", pd.Series(flatten).unique().tolist())
+            print("\ncategorias antes: ", pd.Series(flatten).unique().tolist())
             return first_categories
         else:
             categories = categories.tolist()
@@ -104,13 +104,13 @@ class PoiCategorizationDomain:
                 subset=['user_id'])
             duration_matrix_df = self.file_extractor.read_csv(duration_matrix_filename).drop_duplicates(subset=['user_id'])
             if adjacency_df['user_id'].tolist() != temporal_matrix_df['user_id'].tolist():
-                print("MATRIZES DIFERENTES")
+                print("\nMATRIZES DIFERENTES\n")
                 raise
 
             return adjacency_df, temporal_matrix_df, distance_matrix_df, duration_matrix_df
         else:
             if adjacency_df['user_id'].tolist() != temporal_matrix_df['user_id'].tolist():
-                print("MATRIZES DIFERENTES")
+                print("\nMATRIZES DIFERENTES\n")
                 raise
             return adjacency_df, temporal_matrix_df
 
@@ -240,7 +240,6 @@ class PoiCategorizationDomain:
         new_categories = None
         new_user_metrics = []
         matrix_shape = adjacency_matrices[0].shape
-        print("tamaaanho", matrix_shape)
 
 
         adjacency_matrices = adjacency_matrices.tolist()
@@ -371,7 +370,7 @@ class PoiCategorizationDomain:
 
 
         if len(ids) != len(matrix_df):
-            print("ERRO TAMANHO DA MATRIZ")
+            print("\nERRO TAMANHO DA MATRIZ\n")
             exit()
 
         max_events = 0
@@ -454,8 +453,7 @@ class PoiCategorizationDomain:
                     selected_users.append(user_id)
             """"""
         df_selected_users_visited_locations = pd.DataFrame({'id': selected_users, 'poi_id': selected_visited_locations})
-        print("lvisitas", len(df_selected_users_visited_locations))
-        print("usuários", len(ids), " removidos: ", remove)
+        print("\nQuantidade de usuários", len(ids), " Quantidade removidos: ", remove, "\n")
         self.features_num_columns = temporal_matrices_list[-1].shape[1]
         matrices_list = np.array(matrices_list)
         location_time_list = np.array(location_time_list)
@@ -474,14 +472,6 @@ class PoiCategorizationDomain:
         matrices_weekend_list = np.array(matrices_weekend_list)
         temporal_matrices_weekend_list = np.array(temporal_matrices_weekend_list)
         temporal_matrices_week_list = np.array(temporal_matrices_week_list)
-        print("antes", matrices_list.shape, temporal_matrices_list.shape)
-
-        print("Maior usuário: ", max_user, " ", max_events)
-
-
-        print(users_categories.shape, matrices_list.shape, temporal_matrices_list.shape, distance_matrices_list.shape, duration_matrices_list.shape,
-                        matrices_week_list.shape, temporal_matrices_week_list.shape, matrices_weekend_list.shape, temporal_matrices_weekend_list.shape,
-                        location_time_list.shape, location_location_list.shape)
         return users_categories, matrices_list, temporal_matrices_list, distance_matrices_list, duration_matrices_list, \
                matrices_week_list, temporal_matrices_week_list, matrices_weekend_list, temporal_matrices_weekend_list, \
                location_time_list, location_location_list, selected_users, df_selected_users_visited_locations
@@ -540,7 +530,7 @@ class PoiCategorizationDomain:
 
 
         if len(ids) != len(matrix_df):
-            print("ERRO TAMANHO DA MATRIZ")
+            print("\nERRO TAMANHO DA MATRIZ\n")
             exit()
 
         max_events = 0
@@ -579,7 +569,6 @@ class PoiCategorizationDomain:
             if model_name == "poi_gnn":
                 if week and weekend:
                     user_matrix, user_matrix_week, user_matrix_weekend, user_category, idx = self._resize_adjacency_and_category_matrices(user_matrix, user_matrix_week, user_matrix_weekend, user_category, max_size_matrices, dataset_name)
-                    #print("user matrix week: ", user_matrix_week)
                     user_total = np.sum(user_matrix)
                     if user_total > max_events:
                         max_events = user_total
@@ -678,9 +667,6 @@ class PoiCategorizationDomain:
             matrices_weekend_list = np.array(matrices_weekend_list)
             temporal_matrices_weekend_list = np.array(temporal_matrices_weekend_list)
             temporal_matrices_week_list = np.array(temporal_matrices_week_list)
-        print("antes", matrices_list.shape, temporal_matrices_list.shape)
-
-        print("Maior usuário: ", max_user, " ", max_events)
 
         if model_name == "poi_gnn":
             if week and weekend:
@@ -757,7 +743,6 @@ class PoiCategorizationDomain:
         new_temporal_list_train = []
         new_distance_list_train = []
         new_duration_list_train = []
-        print("tamanho: ", len(adjacency_list_train), adjacency_list_train.shape)
         for i in range(len(adjacency_list_train)):
 
             adjacency_train = adjacency_list_train[i]
@@ -915,8 +900,7 @@ class PoiCategorizationDomain:
             return (adjacency_list_train, user_categories_train, temporal_list_train, distance_list_train, duration_list_train,
                     location_time_list_train, location_location_list_train, adjacency_list_test, user_categories_test, temporal_list_test, distance_list_test,
                     duration_list_test, location_time_list_test, location_location_list_test), class_weight
-        else:
-            # print("retornoo")
+        else:            
             return (adjacency_list_train, user_categories_train, temporal_list_train,
                     adjacency_list_test, user_categories_test, temporal_list_test), class_weight
 
@@ -1021,22 +1005,22 @@ class PoiCategorizationDomain:
         num_classes = max(y_train.flatten()) + 1
         max_size = max_size_matrices
         lr = 0.001
-        print("Quantidade de classes: ", num_classes)
-        print("Tamanho maximo", max_size_matrices)
-        print("Tamanho das matrizes de treino: ", adjacency_train.shape, temporal_train.shape,
+        print("\nQuantidade de classes: ", num_classes)
+        print("\nTamanho maximo", max_size_matrices)
+        print("\nTamanho das matrizes de treino: ", adjacency_train.shape, temporal_train.shape,
               adjacency_week_train.shape, temporal_train_week.shape, distance_train.shape, duration_train.shape, location_time_train.shape, location_location_train.shape)
 
-        print("Tamanho das matrizes de teste: ", adjacency_test.shape, temporal_test.shape,
+        print("\nTamanho das matrizes de teste: ", adjacency_test.shape, temporal_test.shape,
               adjacency_test_week.shape, temporal_test_week.shape, distance_test.shape, duration_test.shape, location_time_test.shape, location_location_train.shape)
         if country == 'BR' or country == "Brazil":
             if version == "normal":
-                print("Tipo de rede neural: NORMAL")
+                print("\nTipo de rede neural: NORMAL\n")
                 model = GNNBR(num_classes, max_size, max_size_sequence,
                             self.features_num_columns).build(seed=seed)
                 lr = 0.005
                 epochs = 35
             elif version == "PATH":
-                print("PATH")
+                print("\nPATH\n")
                 model = GNNPath(num_classes, max_size, max_size_sequence,
                         self.features_num_columns).build(seed=seed)
             batch = 1
@@ -1045,7 +1029,7 @@ class PoiCategorizationDomain:
                         self.features_num_columns).build(seed=seed)
             batch = max_size * 2            
 
-        print("Tamanho do batch: ", batch)
+        print("\nTamanho do batch: ", batch)
 
         user_index = max_user
         self.heatmap_matrices(str(fold_number), [adjacency_test[user_index], adjacency_test_week[user_index], adjacency_test_weekend[user_index],
@@ -1058,7 +1042,9 @@ class PoiCategorizationDomain:
                        duration_train, location_time_train, location_location_train]
         input_test = [adjacency_test, adjacency_test_week, adjacency_test_weekend, temporal_test, temporal_test_week, temporal_test_weekend,
                       distance_test, duration_test, location_time_test, location_location_test]
-
+        
+        print("\nDADOS DE TREINAMENTO\n")
+        print(input_train)
 
         # verifying whether categories arrays are equal
         compare1 = y_train == y_train_week
@@ -1066,13 +1052,15 @@ class PoiCategorizationDomain:
         compare3 = y_test == y_test_week
         compare4 = y_test_week == y_test_weekend
         if not(compare1.all() and compare2.all() and compare3.all() and compare4.all()):
-            print("Listas difernetes de categorias")
+            print("\nListas difernetes de categorias\n")
             exit()
 
         model.compile(optimizer=Adam(learning_rate=lr), loss=['categorical_crossentropy'],
                       weighted_metrics=[tf.keras.metrics.CategoricalAccuracy(name="acc")
                                         ])
         y_train = np_utils.to_categorical(y_train, num_classes=num_classes)
+        print("\nRÓTULOS DE TREINAMENTO\n")
+        print(y_train)
         y_test = np_utils.to_categorical(y_test, num_classes=num_classes)
         hi = model.fit(x=input_train,
                        y=y_train, validation_data=(input_test, y_test),
@@ -1082,17 +1070,22 @@ class PoiCategorizationDomain:
                            EarlyStopping(patience=100, restore_best_weights=True)
                        ]
                        )
+        
 
         h = hi.history
         y_predict_location = model.predict(input_test,
                                            batch_size=batch)
 
+        print("\n PREDICT LOCATION EXIT \n", y_predict_location)
         scores = model.evaluate(input_test,
                                 y_test, batch_size=batch)
-        print("scores: ", scores)
+        print("\nscores: ", scores)
 
         # To transform one_hot_encoding to list of integers, representing the locations
         y_predict_location = one_hot_decoding_predicted(y_predict_location)
+        print("\nTAMANHO CONJUNTO DE TESTE: ", len(y_test))
+        print("\n PREDICT LOCATION (ONE HOT ENCODING) \n", y_predict_location)
+        print("\nTAMANHO SAÍDA: ", len(y_predict_location))
         y_test = one_hot_decoding_predicted(y_test)
         report = skm.classification_report(y_test, y_predict_location, output_dict=True)
         print(report)

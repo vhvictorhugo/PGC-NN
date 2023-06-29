@@ -36,7 +36,7 @@ class MatrixGenerationForPoiCategorizationJob():
         state = ""
         max_time_between_records = ""
         differemt_venues = "yes"
-        print("Dataset: ", dataset_name)
+        print("\nDataset: ", dataset_name)
 
         convert_country = {'Brazil': 'BR', 'BR': 'BR', 'United States': 'US'}
 
@@ -107,10 +107,10 @@ class MatrixGenerationForPoiCategorizationJob():
 
         if state != "":
             users_checkin = users_checkin.query(state_column + " == '" + state + "'")
-        print("----- verificação -----")
-        print("Pais: ", users_checkin[country_column].unique().tolist())
+        print("\n----- verificação -----")
+        print("\nPais: ", users_checkin[country_column].unique().tolist())
         if len(state) > 0:
-            print("Estado: ", users_checkin[state_column].unique().tolist())
+            print("\nEstado: ", users_checkin[state_column].unique().tolist())
 
         # data
 
@@ -122,8 +122,7 @@ class MatrixGenerationForPoiCategorizationJob():
             # coluna com as categorias em um determinado raio em metros
             osm_category_column = MatrixGenerationForPoiCategorizationConfiguration.DATASET_COLUMNS.get_value()[dataset_name]['osm_category_column']
 
-        print("coluna osm", osm_category_column)
-        #----------------------
+        print("\ncoluna osm", osm_category_column)
 
         """
         Generate matrixes for each user 
@@ -137,11 +136,9 @@ class MatrixGenerationForPoiCategorizationJob():
         elif directed == "no":
             directed = False
             folder = 'gowalla/'
-            print("Pasta: ", folder)
             self.folder_generation(folder)
             country = convert_country[country]
             adjacency_matrix_filename = folder + adjacency_matrix_base_filename + "_not_directed_" + hour_file + categories_type + "_" + country + ".csv"
-            print("nome matriz", adjacency_matrix_filename)
             adjacency_weekday_matrix_filename = folder + adjacency_matrix_base_filename + "_weekday_not_directed_"+hour_file+categories_type+"_"+country+".csv"
             adjacency_weekend_matrix_filename = folder+adjacency_matrix_base_filename + "_weekend_not_directed_"+hour_file+categories_type+"_"+country+".csv"
             temporal_matrix_filename = folder+features_matrix_base_filename + "_not_directed_"+hour_file+categories_type+"_"+country+".csv"
@@ -167,9 +164,6 @@ class MatrixGenerationForPoiCategorizationJob():
             user_poi_vector_base_filename = folder+"user_poi_vector_directed7_categories_United States.csv"
             sequence_matrix_base_filename = folder + sequence_matrix_base_filename + "directed_" + hour_file + categories_type +"_"+country+ ".csv"
 
-        print("arquivos: ", folder, adjacency_matrix_base_filename, features_matrix_base_filename)
-        print("padrao", pattern_matrices)
-        print("tamanho: ", users_checkin.shape)
         if pattern_matrices == "yes":
             self.matrix_generation_for_poi_categorization_domain\
                 .generate_pattern_matrices(users_checkin,
@@ -216,5 +210,4 @@ class MatrixGenerationForPoiCategorizationJob():
                                            datetime_column)
 
     def folder_generation(self, folder):
-        print("criação da pas: ", folder)
         Path(folder).mkdir(parents=True, exist_ok=True)

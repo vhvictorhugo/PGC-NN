@@ -30,7 +30,6 @@ class PoiCategorizationLoader:
         n_folds = len(folds_histories)
         n_replications = len(folds_histories[0])
         output_dir = output_dir + str(n_folds) + "_folds/" + str(n_replications) + "_replications/"
-        print("pasta: ", output_dir)
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         for i in range(len(folds_histories)):
             fold_histories = folds_histories[i]
@@ -101,7 +100,6 @@ class PoiCategorizationLoader:
         precision = pd.DataFrame(precision_dict)
         print("Métricas precision: \n", precision)
         output_dir = output_dir + str(n_folds) + "_folds/" + str(n_replications) + "_replications/"
-        print("pasta", output_dir)
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         precision.to_csv(output_dir + "precision.csv", index_label=False, index=False)
 

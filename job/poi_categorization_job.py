@@ -35,15 +35,13 @@ class PoiCategorizationJob:
         country = "US"
         state = "Texas"
         version = "normal"
-        print("Dataset: ", dataset_name)
+        print("\nDataset: ", dataset_name)
 
         max_size_matrices = self.poi_categorization_configuration.MAX_SIZE_MATRICES[1]
         max_size_paths = self.poi_categorization_configuration.MINIMUM_RECORDS[1]
         n_splits = self.poi_categorization_configuration.N_SPLITS[1]
         n_replications = self.poi_categorization_configuration.N_REPLICATIONS[1]
         epochs = self.poi_categorization_configuration.EPOCHS[1][country]
-        print("contar", self.poi_categorization_configuration.INT_TO_CATEGORIES[1][dataset_name])
-        print("ori", self.poi_categorization_configuration.INT_TO_CATEGORIES[1])
         output_base_dir = self.poi_categorization_configuration.OUTPUT_DIR[1]
         dataset_type_dir = self.poi_categorization_configuration.DATASET_TYPE[1][dataset_name]
         category_type_dir = self.poi_categorization_configuration.CATEGORY_TYPE[1][categories_type]
@@ -81,9 +79,6 @@ class PoiCategorizationJob:
         # normal matrices
         adjacency_df, temporal_df, distance_df, duration_df = self.poi_categorization_domain.\
             read_matrix(adjacency_matrix_filename, temporal_matrix_filename, distance_matrix_filename, duration_matrix_filename)
-        print("arquivos: \n", adjacency_matrix_filename)
-        print(adjacency_df)
-        print(temporal_matrix_filename)
 
         # week matrices
         adjacency_week_df, temporal_week_df = self.poi_categorization_domain. \
@@ -91,7 +86,7 @@ class PoiCategorizationJob:
         # weekend matrices
         adjacency_weekend_df, temporal_weekend_df = self.poi_categorization_domain. \
             read_matrix(adjacency_matrix_weekend_filename, temporal_matrix_weekend_filename)
-        print("Verificação de matrizes")
+        print("\nVerificação de matrizes\n")
         self.matrices_verification([adjacency_df, temporal_df, adjacency_week_df, temporal_week_df,
                                    adjacency_weekend_df, temporal_weekend_df, distance_df, duration_df])
 
@@ -105,7 +100,7 @@ class PoiCategorizationJob:
 
 
 
-        print("Preprocessing")
+        print("\nPreprocessing\n")
         users_categories, adjacency_df, temporal_df, distance_df, duration_df, adjacency_week_df, temporal_week_df, \
         adjacency_weekend_df, temporal_weekend_df, location_time_df, location_location_df, selected_users, df_selected_users_visited_locations = self.poi_categorization_domain.poi_gnn_adjacency_preprocessing(inputs,
                                     max_size_matrices,
@@ -149,12 +144,12 @@ class PoiCategorizationJob:
                                     n_splits,
                                     'weekend')
 
-        print("class weight: ", class_weight)
+        print("\nclass weight: ", class_weight)
         inputs_folds = {'all_week': {'folds': folds, 'class_weight': class_weight},
                         'week': {'folds': folds_week, 'class_weight': class_weight_week},
                         'weekend': {'folds': folds_weekend, 'class_weight': class_weight_weekend}}
 
-        print("Treino")
+        print("\nTreino\n")
         folds_histories, base_report, model = self.poi_categorization_domain.\
             k_fold_with_replication_train_and_evaluate_model(inputs_folds,
                                                              n_replications,
@@ -169,22 +164,16 @@ class PoiCategorizationJob:
                                                              output_dir)
 
         selected_users.to_csv(output_dir + "selected_users.csv", index=False)
-        print("base: ", base_dir)
-        print("------------- Location ------------")
-        print(base_report)
+        print("\nbase: ", base_dir)
         base_report = self.poi_categorization_domain.preprocess_report(base_report, int_to_category)
         self.poi_categorization_loader.plot_history_metrics(folds_histories, base_report, output_dir)
         self.poi_categorization_loader.save_report_to_csv(output_dir, base_report, n_splits, n_replications, usuarios)
         self.poi_categorization_loader.save_model_and_weights(model, output_dir, n_splits, n_replications)
-        print("Usuarios processados: ", usuarios)
-        print("Tamanho máximo de matriz: ", max_size_matrices)
-        print("Quantidade mínima de registros: ", max_size_paths)
+        print("\nUsuarios processados: ", usuarios)
 
     def matrices_verification(self, df_list):
 
         for i in range(1, len(df_list)):
             if not(len(df_list[i-1]) == len(df_list[i])):
-                print("Matrizes com tamanhos diferentes")
+                print("\nMatrizes com tamanhos diferentes\n")
                 raise
-
-        print("Quantidade inicial de usuários: ", len(df_list[0]))

@@ -28,13 +28,13 @@ class ConfusionMatrix:
         recall = self.tp/(self.tp + self.fn)
         fscore = 2*(precision*recall)/(precision+recall)
         print("---------")
-        print("Poi type: ", self.poi_type)
-        print("Precision: ", precision)
-        print("Recall: ", recall)
-        print("F1-score: ", fscore)
+        print("\nPoi type: ", self.poi_type)
+        print("\nPrecision: ", precision)
+        print("\nRecall: ", recall)
+        print("\nF1-score: ", fscore)
         if self.total_users_inverted_routine_tp > 0:
-            print("Hits from users that have inverted routine")
-            print("Quantidade: ", self.total_users_inverted_routine_tp)
+            print("\nHits from users that have inverted routine")
+            print("\nQuantidade: ", self.total_users_inverted_routine_tp)
 
     def set_total_samples_of_poi_type(self, total):
         self.total_samples_of_poi_type += total
