@@ -8,3 +8,5 @@ __pycache__/
 *.png
 *.h5
 *.npz
+*.xml
+checkins_data/

@@ -16,16 +16,16 @@ class PoiCategorizationJob:
         self.poi_categorization_configuration = PoICategorizationConfiguration()
 
     def start(self):
-        base_dir = "gowalla/processed/"
-        adjacency_matrix_filename = "gowalla/processed/adjacency_matrix_not_directed_48_7_categories_US.csv"
-        adjacency_matrix_week_filename = "gowalla/processed/adjacency_matrix_weekday_not_directed_48_7_categories_US.csv"
-        adjacency_matrix_weekend_filename = "gowalla/processed/adjacency_matrix_weekend_not_directed_48_7_categories_US.csv"
+        base_dir = "gowalla/"
+        adjacency_matrix_filename = "gowalla/adjacency_matrix_not_directed_48_7_categories_US.csv"
+        adjacency_matrix_week_filename = "gowalla/adjacency_matrix_weekday_not_directed_48_7_categories_US.csv"
+        adjacency_matrix_weekend_filename = "gowalla/adjacency_matrix_weekend_not_directed_48_7_categories_US.csv"
         graph_type = "not_directed"
-        temporal_matrix_filename = "gowalla/processed/features_matrix_not_directed_48_7_categories_US.csv"
-        temporal_matrix_week_filename = "gowalla/processed/features_matrix_weekday_not_directed_48_7_categories_US.csv"
-        temporal_matrix_weekend_filename = "gowalla/processed/features_matrix_weekend_not_directed_48_7_categories_US.csv"
-        distance_matrix_filename = "gowalla/processed/distance_matrix_not_directed_48_7_categories_US.csv"
-        duration_matrix_filename = "gowalla/processed/duration_matrix_not_directed_48_7_categories_US.csv"
+        temporal_matrix_filename = "gowalla/features_matrix_not_directed_48_7_categories_US.csv"
+        temporal_matrix_week_filename = "gowalla/features_matrix_weekday_not_directed_48_7_categories_US.csv"
+        temporal_matrix_weekend_filename = "gowalla/features_matrix_weekend_not_directed_48_7_categories_US.csv"
+        distance_matrix_filename = "gowalla/distance_matrix_not_directed_48_7_categories_US.csv"
+        duration_matrix_filename = "gowalla/duration_matrix_not_directed_48_7_categories_US.csv"
         dataset_name = "gowalla"
         base = "base"
         categories_type = "7_categories"
@@ -33,7 +33,7 @@ class PoiCategorizationJob:
         location_time_filename = "gowalla/location_time_pmi_matrix_7_categories_US.csv"
         int_to_locationid_filename = "gowalla/int_to_locationid_7_categories_US.csv"
         country = "US"
-        state = "Texas"
+        state = "Alabama"
         version = "normal"
         print("\nDataset: ", dataset_name)
 
@@ -67,9 +67,9 @@ class PoiCategorizationJob:
         max_time_between_records_dir = ""
 
         if len(state) > 0:
-            base_dir = "gowalla/processed/"
+            base_dir = "gowalla/"
         else:
-            base_dir = "gowalla/processed/"
+            base_dir = "gowalla/"
 
         if len(base) > 0:
             base = True
