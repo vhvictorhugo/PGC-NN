@@ -33,7 +33,7 @@ class PoiCategorizationJob:
         location_time_filename = "gowalla/location_time_pmi_matrix_7_categories_US.csv"
         int_to_locationid_filename = "gowalla/int_to_locationid_7_categories_US.csv"
         country = "US"
-        state = "Alabama"
+        state = "New_York"
         version = "normal"
         print("\nDataset: ", dataset_name)
 
