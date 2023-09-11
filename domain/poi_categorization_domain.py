@@ -16,9 +16,6 @@ from tensorflow.keras import utils as np_utils
 from loader.file_loader import FileLoader
 from loader.poi_categorization_loader import PoiCategorizationLoader
 from extractor.file_extractor import FileExtractor
-from model.neural_network.poi_gnn.BR.gnn_br_transfer_learning import GNNBR
-from model.neural_network.poi_gnn.US.gnn import GNNUS
-from model.neural_network.poi_gnn.path.gnn import GNNPath
 from model.neural_network.poi_gnn.US.gnn_base_model_for_transfer_learning import GNNUS_BaseModel
 from utils.nn_preprocessing import one_hot_decoding_predicted, top_k_rows, top_k_rows_category, top_k_rows_centrality, split_graph, top_k_rows_category_user_tracking, top_k_rows_order
 
@@ -1012,22 +1009,15 @@ class PoiCategorizationDomain:
 
         print("\nTamanho das matrizes de teste: ", adjacency_test.shape, temporal_test.shape,
               adjacency_test_week.shape, temporal_test_week.shape, distance_test.shape, duration_test.shape, location_time_test.shape, location_location_train.shape)
-        if country == 'BR' or country == "Brazil":
-            if version == "normal":
-                print("\nTipo de rede neural: NORMAL\n")
-                model = GNNBR(num_classes, max_size, max_size_sequence,
-                            self.features_num_columns).build(seed=seed)
-                lr = 0.005
-                epochs = 35
-            elif version == "PATH":
-                print("\nPATH\n")
-                model = GNNPath(num_classes, max_size, max_size_sequence,
-                        self.features_num_columns).build(seed=seed)
-            batch = 1
-        elif country == 'US':
-            model = GNNUS_BaseModel(num_classes, max_size, max_size_sequence,
-                        self.features_num_columns).build(seed=seed)
-            batch = max_size * 2            
+        
+        model = GNNUS_BaseModel(
+            num_classes,
+            max_size,
+            max_size_sequence,
+            self.features_num_columns
+            ).build(seed=seed)
+        batch = max_size * 2  
+                      
 
         print("\nTamanho do batch: ", batch)
 
