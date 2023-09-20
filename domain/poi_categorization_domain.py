@@ -914,7 +914,6 @@ class PoiCategorizationDomain:
                                                          base_report,
                                                          epochs,
                                                          class_weight,
-                                                         base,
                                                          country,
                                                          version,
                                                          output_dir):
@@ -948,7 +947,6 @@ class PoiCategorizationDomain:
                                                                                 epochs,
                                                                                 seed,
                                                                                 country,
-                                                                                 base,
                                                                                 output_dir,
                                                                                 version)
 
@@ -978,7 +976,6 @@ class PoiCategorizationDomain:
                                  epochs,
                                  seed,
                                  country,
-                                 base,
                                  output_dir,
                                  version="normal",
                                  model=None):

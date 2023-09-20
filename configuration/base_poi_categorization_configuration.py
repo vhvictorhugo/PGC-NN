@@ -29,7 +29,7 @@ class BasePoiCategorizationConfiguration:
 
         self.COUNTRY = ("country", {'BR': "BR/", 'US': "US/", 'JP': "JP/", 'Brazil': 'BR/', 'United States': 'US/'})
 
-        self.STATE = ("state", {'sp': "SP/", 'CA': "CA/", 'NY': "NY/", "": "", 'CALIFORNIA': "CA/", "New_York": "NY/", 'Minnesota': "MN/",})
+        self.STATE = ("state", {'sp': "SP/", 'CA': "CA/", 'NY': "NY/", "": "", 'CALIFORNIA': "CA/", "New_York": "NY/", 'Minnesota': "MN/", 'Alabama':'AL/'})
 
         self.MAX_TIME_BETWEEN_RECORDS = ("max_time_between_records", {"1": "1_days/", "3": "3_days/", '': ""})
 

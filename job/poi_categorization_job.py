@@ -27,13 +27,12 @@ class PoiCategorizationJob:
         distance_matrix_filename = "gowalla/distance_matrix_not_directed_48_7_categories_US.csv"
         duration_matrix_filename = "gowalla/duration_matrix_not_directed_48_7_categories_US.csv"
         dataset_name = "gowalla"
-        base = "base"
         categories_type = "7_categories"
         location_location_filename = "gowalla/location_location_pmi_matrix_7_categories_US.npz"
         location_time_filename = "gowalla/location_time_pmi_matrix_7_categories_US.csv"
         int_to_locationid_filename = "gowalla/int_to_locationid_7_categories_US.csv"
         country = "US"
-        state = "New_York"
+        state = "Alabama"
         version = "normal"
         print("\nDataset: ", dataset_name)
 
@@ -50,10 +49,8 @@ class PoiCategorizationJob:
         country_dir = self.poi_categorization_configuration.COUNTRY[1][country]
         state_dir = self.poi_categorization_configuration.STATE[1][state]
         version_dir = self.poi_categorization_configuration.VERSION[1][version]
-        if len(base) > 0:
-            base = base + "/"
         output_dir = self.poi_categorization_configuration.output_dir(output_base_dir=output_base_dir,
-                                                                      base=base,
+                                                                      base="base/",
                                                                       graph_type=graph_type_dir,
                                                                       dataset_type=dataset_type_dir,
                                                                       country=country_dir,
@@ -64,17 +61,7 @@ class PoiCategorizationJob:
 
 
         base_report = self.poi_categorization_configuration.REPORT_MODEL[1][categories_type]
-        max_time_between_records_dir = ""
-
-        if len(state) > 0:
-            base_dir = "gowalla/"
-        else:
-            base_dir = "gowalla/"
-
-        if len(base) > 0:
-            base = True
-        else:
-            base = False
+        base_dir = "gowalla/"
 
         # normal matrices
         adjacency_df, temporal_df, distance_df, duration_df = self.poi_categorization_domain.\
@@ -158,7 +145,6 @@ class PoiCategorizationJob:
                                                              base_report,
                                                              epochs,
                                                              class_weight,
-                                                             base,
                                                              country,
                                                              version,
                                                              output_dir)
