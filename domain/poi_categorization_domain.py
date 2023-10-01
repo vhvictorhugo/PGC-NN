@@ -29,68 +29,6 @@ class PoiCategorizationDomain:
         self.poi_categorization_loader = PoiCategorizationLoader()
         self.dataset_name = dataset_name
 
-    def _selecting_categories(self, categories: pd.Series):
-
-        unique_category = categories.unique()
-        unique_category = pd.Series(unique_category)
-        unique_category = unique_category.str.split(":")
-        unique_category = unique_category.tolist()
-        first_category = []
-
-        for c in unique_category:
-            if type(c) == list:
-                first_category.append(c[0][2:])
-
-        unique_first_category = pd.Series(first_category)
-        return unique_first_category
-
-    def _first_level_categories(self, matrices: pd.Series, categories: pd.Series, categories_to_int_osm: dict):
-
-        if self.dataset_name == "weeplaces":
-            categories = categories.tolist()
-            first_categories = []
-            flatten = []
-            unique_first_level_categories = list(categories_to_int_osm)
-            print("\nunicos: ", unique_first_level_categories, type(unique_first_level_categories), unique_first_level_categories[1])
-            for i in range(len(categories)):
-                user_categories = categories[i]
-                user_first_level_categories = []
-                user_categories = user_categories.split(", ")
-                inicial = len(user_categories)
-
-
-                user_matrix = matrices.iloc[i]
-                user_matrix = json.loads(user_matrix)
-                user_matrix = np.array(user_matrix)
-
-                if inicial != user_matrix.shape[0]:
-                    print("\nDiferentes matrix: ", inicial, user_matrix.shape[0])
-                for j in range(len(user_categories)):
-                    element = user_categories[j]
-                    element = element.replace("[", "").replace("]", "").replace("'", "")
-                    for k in range(0, len(unique_first_level_categories)):
-                        first_level_category = unique_first_level_categories[k]
-                        if element.find(first_level_category) != -1:
-                            element = first_level_category
-                            break
-                        if len(element) == 1 and element == ' ':
-                            element = ''
-                    user_first_level_categories.append(element)
-                final = len(user_first_level_categories)
-                if inicial != final:
-                    print("\nDiferentes: ", inicial, final)
-                flatten = flatten + user_first_level_categories
-                first_categories.append(user_first_level_categories)
-            print("\ncategorias antes: ", pd.Series(flatten).unique().tolist())
-            return first_categories
-        else:
-            categories = categories.tolist()
-            first_categories = []
-
-            for i in range(len(categories)):
-                categories[i] = categories[i].replace("[", "").replace("]", "").replace("'","").split(", ")
-                first_categories.append(categories[i])
-            return first_categories
 
     def read_matrix(self, adjacency_matrix_filename, temporal_matrix_filename, distance_matrix_filename=None, duration_matrix_filename=None):
 
@@ -110,13 +48,6 @@ class PoiCategorizationDomain:
                 print("\nMATRIZES DIFERENTES\n")
                 raise
             return adjacency_df, temporal_matrix_df
-
-    def read_matrices(self, adjacency_matrix_dir, feature_matrix_dir):
-
-        adjacency_df = self.file_extractor.read_multiples_csv(adjacency_matrix_dir)
-        feature_df = self.file_extractor.read_multiples_csv(feature_matrix_dir)
-
-        return adjacency_df, feature_df
 
     def read_users_metrics(self, filename):
 
@@ -211,98 +142,6 @@ class PoiCategorizationDomain:
         user_category = user_category[idx]
 
         return user_matrix, user_category, idx
-
-    def _resize_features_matrix(self, feature_matrix, idx, max_size_matrices):
-
-        feature_matrix = feature_matrix[idx]
-        if feature_matrix.shape[0] < max_size_matrices:
-            difference = max_size_matrices - feature_matrix.shape[0]
-            feature_matrix = np.pad(feature_matrix, (difference, 0), mode='constant', constant_values=0)
-            feature_matrix = feature_matrix[:, :24]
-
-        return feature_matrix
-
-    def add_non_zero_indices(self, matrix, non_zero_indices, value):
-
-        for i in range(len(non_zero_indices)):
-
-            matrix[non_zero_indices[0][i]][non_zero_indices[1][i]] = matrix[non_zero_indices[0][i]][non_zero_indices[1][i]] + value
-
-        return matrix
-
-    def _augmentate_training_data(self, adjacency_matrices, features_matrices, categories, augmentation_cateogories: dict, user_metrics=None):
-
-        new_adjacency_matrices = None
-        new_features_matrices = None
-        new_categories = None
-        new_user_metrics = []
-        matrix_shape = adjacency_matrices[0].shape
-
-
-        adjacency_matrices = adjacency_matrices.tolist()
-        features_matrices = features_matrices.tolist()
-        categories = categories.tolist()
-
-        for i in range(len(categories)):
-            adjacency_matrix = adjacency_matrices[i]
-            features_matrix = features_matrices[i]
-            category = categories[i]
-            if user_metrics is not None:
-                user_metric = user_metrics[i]
-
-            replication_level = 1
-
-            if 0 in category or 6 in category:
-
-
-                replication_level = 3
-
-            # augmentation
-            adjacency_non_zero_indices = np.nonzero(np.array(adjacency_matrix))
-            features_non_zero_indices = np.nonzero(np.array(features_matrix))
-            if replication_level > 1:
-                aux = []
-                aux2 = []
-                aux3 = []
-                for j in range(replication_level):
-                    aux.append(category)
-                    random_int = np.random.randint(low=2, high=10)
-                    aux2.append(np.random.permutation(np.array(adjacency_matrix)).tolist())
-                    aux3.append(np.random.permutation(np.array(features_matrix)).tolist())
-
-                aux.append(category)
-                category = aux
-                aux2.append(adjacency_matrix)
-                adjacency_matrix = aux2
-                aux3.append(features_matrix)
-                features_matrix = aux3
-                if user_metrics is not None:
-                    user_metric = user_metric * replication_level
-
-            adjacency_matrix = np.array(adjacency_matrix)
-            features_matrix = np.array(features_matrix)
-            category = np.array(category)
-            if adjacency_matrix.ndim == 2:
-                adjacency_matrix = np.array([adjacency_matrix])
-                features_matrix = np.array([features_matrix])
-
-            if category.ndim == 1:
-                category = np.array([category])
-
-            if new_adjacency_matrices is None:
-                new_adjacency_matrices = adjacency_matrix
-                new_features_matrices = features_matrix
-                new_categories = category
-            else:
-                new_adjacency_matrices = np.concatenate([new_adjacency_matrices, adjacency_matrix])
-                new_features_matrices = np.concatenate([new_features_matrices, features_matrix])
-                new_categories = np.concatenate([new_categories, category])
-
-            if user_metrics is not None:
-                new_user_metrics+= user_metric
-
-        return new_adjacency_matrices, new_features_matrices, \
-               new_categories, np.array(new_user_metrics)
 
     def _filter_pmi_matrix(self, location_time, location_location, locationid_to_int, visited_location_ids):
 
@@ -473,218 +312,6 @@ class PoiCategorizationDomain:
                matrices_week_list, temporal_matrices_week_list, matrices_weekend_list, temporal_matrices_weekend_list, \
                location_time_list, location_location_list, selected_users, df_selected_users_visited_locations
 
-    def adjacency_preprocessing(self,
-                                inputs,
-                                max_size_matrices,
-                                max_size_sequence,
-                                week,
-                                weekend,
-                                num_categories,
-                                dataset_name,
-                                model_name="poi_gnn"):
-
-        matrices_list = []
-        temporal_matrices_list = []
-        distance_matrices_list = []
-        duration_matrices_list = []
-        # week
-        matrices_week_list = []
-        temporal_matrices_week_list = []
-        # weekend
-        matrices_weekend_list = []
-        temporal_matrices_weekend_list = []
-        # location time
-        location_time_list = []
-        location_location_list = []
-
-        users_categories = []
-        flatten_users_categories = []
-        maior = -10
-        remove_users_ids = []
-
-        matrix_df = inputs['all_week']['adjacency']
-        ids = matrix_df['user_id'].unique().tolist()
-        matrix_df = matrix_df['matrices'].tolist()
-        category_df = inputs['all_week']['adjacency']['category'].tolist()
-        temporal_df = inputs['all_week']['temporal']['matrices'].tolist()
-
-        if model_name == "poi_gnn":
-            distance_df = inputs['all_week']['distance']['matrices'].tolist()
-            duration_df = inputs['all_week']['duration']['matrices'].tolist()
-            visited_location_ids = inputs['all_week']['adjacency']['visited_location_ids'].tolist()
-            location_location_df = inputs['all_week']['location_location']
-            location_time_df = inputs['all_week']['location_time'].to_numpy()
-            locationid_to_int = inputs['all_week']['int_to_locationid']
-            locationid_to_int_ids = locationid_to_int['locationid'].tolist()
-            locationid_to_int_ints = locationid_to_int['int'].tolist()
-            locationid_to_int = {locationid_to_int_ids[i]: locationid_to_int_ints[i] for i in range(len(locationid_to_int_ints))}
-            # week
-            matrix_week_df = inputs['week']['adjacency']['matrices'].tolist()
-            temporal_week_df = inputs['week']['temporal']['matrices'].tolist()
-            # weekend
-            matrix_weekend_df = inputs['weekend']['adjacency']['matrices'].tolist()
-            temporal_weekend_df = inputs['weekend']['temporal']['matrices'].tolist()
-
-
-        if len(ids) != len(matrix_df):
-            print("\nERRO TAMANHO DA MATRIZ\n")
-            exit()
-
-        max_events = 0
-        max_user = -1
-        selected_users = []
-        for i in range(len(ids)):
-            user_id = ids[i]
-
-            user_matrix = matrix_df[i]
-            user_category = category_df[i]
-            user_matrix = json.loads(user_matrix)
-            user_matrix = np.array(user_matrix)
-            user_category = json.loads(user_category)
-            user_category = np.array(user_category)
-            if model_name == "poi_gnn":
-                # week
-                user_matrix_week = matrix_week_df[i]
-                user_matrix_week = json.loads(user_matrix_week)
-                user_matrix_week = np.array(user_matrix_week)
-                # weekend
-                user_matrix_weekend = matrix_weekend_df[i]
-                user_matrix_weekend = json.loads(user_matrix_weekend)
-                user_matrix_weekend = np.array(user_matrix_weekend)
-                # user visited
-                user_visited = visited_location_ids[i]
-                user_visited = json.loads(user_visited)
-                user_visited = np.array(user_visited)
-            if user_matrix.shape[0] < max_size_matrices:
-                remove_users_ids.append(user_id)
-                continue
-            size = user_matrix.shape[0]
-            if size > maior:
-                maior = size
-
-            # matrices get new size, equal for everyone
-            if model_name == "poi_gnn":
-                if week and weekend:
-                    user_matrix, user_matrix_week, user_matrix_weekend, user_category, idx = self._resize_adjacency_and_category_matrices(user_matrix, user_matrix_week, user_matrix_weekend, user_category, max_size_matrices, dataset_name)
-                    user_total = np.sum(user_matrix)
-                    if user_total > max_events:
-                        max_events = user_total
-                        max_user = i
-                else:
-                    user_matrix, user_category, idx = self._resize_adjacency_and_category_matrices_baselines(
-                        user_matrix, user_category, max_size_matrices)
-                user_visited = user_visited[idx]
-                if model_name == "gcn" or model_name == "gae":
-                    user_matrix = sk.layers.GCNConv.preprocess(user_matrix)
-                elif model_name == "arma" or model_name == "arma_enhanced" or model_name == "poi_gnn":
-                    user_matrix = sk.layers.ARMAConv.preprocess(user_matrix)
-                    user_matrix_week = sk.layers.ARMAConv.preprocess(user_matrix_week)
-                    user_matrix_weekend = sk.layers.ARMAConv.preprocess(user_matrix_weekend)
-                elif model_name == "diff":
-                    user_matrix = sk.layers.DiffusionConv.preprocess(user_matrix)
-            else:
-                user_matrix, user_category, idx = self._resize_adjacency_and_category_matrices_baselines(
-                    user_matrix, user_category, max_size_matrices)
-                if model_name == "gcn" or model_name == "gae":
-                    user_matrix = sk.layers.GCNConv.preprocess(user_matrix)
-                elif model_name == "arma" or model_name == "arma_enhanced" or model_name == "poi_gnn":
-                    user_matrix = sk.layers.ARMAConv.preprocess(user_matrix)
-                elif model_name == "diff":
-                    user_matrix = sk.layers.DiffusionConv.preprocess(user_matrix)
-
-            """feature"""
-            user_temporal_matrix = temporal_df[i]
-            user_temporal_matrix = json.loads(user_temporal_matrix)
-            user_temporal_matrix = np.array(user_temporal_matrix)
-            user_temporal_matrix = user_temporal_matrix[idx]
-            user_temporal_matrix = self._min_max_normalize(user_temporal_matrix)
-            if model_name == "poi_gnn":
-                # week
-                user_temporal_matrix_week = temporal_week_df[i]
-                user_temporal_matrix_week = json.loads(user_temporal_matrix_week)
-                user_temporal_matrix_week = np.array(user_temporal_matrix_week)
-                user_temporal_matrix_week = user_temporal_matrix_week[idx]
-                # weekend
-                user_temporal_matrix_weekend = temporal_weekend_df[i]
-                user_temporal_matrix_weekend = json.loads(user_temporal_matrix_weekend)
-                user_temporal_matrix_weekend = np.array(user_temporal_matrix_weekend)
-                user_temporal_matrix_weekend = user_temporal_matrix_weekend[idx]
-                # location time
-                user_location_time, user_location_location = self._filter_pmi_matrix(location_time_df, location_location_df, locationid_to_int, user_visited)
-                user_location_time = self._min_max_normalize(user_location_time)
-                location_time_list.append(user_location_time)
-                user_location_location = spektral.layers.ARMAConv.preprocess(user_location_location)
-                location_location_list.append(user_location_location)
-
-            if model_name == "poi_gnn":
-                """distance"""
-                user_distance_matrix = distance_df[i]
-                user_distance_matrix = json.loads(user_distance_matrix)
-                user_distance_matrix = np.array(user_distance_matrix)
-                user_distance_matrix = user_distance_matrix[idx[:,None], idx]
-
-                """duration"""
-                user_duration_matrix = duration_df[i]
-                user_duration_matrix = json.loads(user_duration_matrix)
-                user_duration_matrix = np.array(user_duration_matrix)
-                user_duration_matrix = user_duration_matrix[idx[:,None], idx]
-
-            """"""
-            matrices_list.append(user_matrix)
-            users_categories.append(user_category)
-            flatten_users_categories = flatten_users_categories + user_category.tolist()
-            temporal_matrices_list.append(user_temporal_matrix)
-            if model_name == "poi_gnn":
-                distance_matrices_list.append(user_distance_matrix)
-                duration_matrices_list.append(user_duration_matrix)
-                # week
-                matrices_week_list.append(user_matrix_week)
-                temporal_matrices_week_list.append(user_temporal_matrix_week)
-                # weekend
-                matrices_weekend_list.append(user_matrix_weekend)
-                temporal_matrices_weekend_list.append(user_temporal_matrix_weekend)
-
-            selected_users.append(user_id)
-
-        self.features_num_columns = temporal_matrices_list[-1].shape[1]
-        matrices_list = np.array(matrices_list)
-        location_time_list = np.array(location_time_list)
-        location_location_list = np.array(location_location_list)
-        temporal_matrices_list = np.array(temporal_matrices_list)
-        users_categories = np.array(users_categories)
-        if model_name == "poi_gnn":
-            distance_matrices_list = np.array(distance_matrices_list)
-            duration_matrices_list = np.array(duration_matrices_list)
-
-            # week
-            matrices_week_list = np.array(matrices_week_list)
-            temporal_matrices_week_list = np.array(temporal_matrices_week_list)
-
-            # weekend
-            matrices_weekend_list = np.array(matrices_weekend_list)
-            temporal_matrices_weekend_list = np.array(temporal_matrices_weekend_list)
-            temporal_matrices_week_list = np.array(temporal_matrices_week_list)
-
-        if model_name == "poi_gnn":
-            if week and weekend:
-                return (users_categories, matrices_list, temporal_matrices_list, distance_matrices_list, duration_matrices_list,
-                        matrices_week_list, temporal_matrices_week_list, matrices_weekend_list, temporal_matrices_weekend_list,
-                        location_time_list, location_location_list, selected_users)
-            else:
-                return (matrices_list, users_categories, temporal_matrices_list,distance_matrices_list,
-                        duration_matrices_list, remove_users_ids, selected_users)
-        else:
-            return (matrices_list, users_categories, temporal_matrices_list)
-
-    def generate_nodes_ids(self, rows, cols):
-
-        ids = []
-        for i in range(rows):
-            row = [i for i in range(cols)]
-            ids.append(row)
-
-        return np.array(ids)
-
     def k_fold_split_train_test(self,
                                 k,
                                 inputs,
@@ -732,93 +359,6 @@ class PoiCategorizationDomain:
                 break
 
         return folds, classes_weights
-
-    def preprocess_adjacency_matrix_train(self, k, model_name, adjacency_list_train, user_categories_train, temporal_list_train, distance_list_train, duration_list_train):
-
-        new_adjacency_list_train = []
-        new_user_categories_train = []
-        new_temporal_list_train = []
-        new_distance_list_train = []
-        new_duration_list_train = []
-        for i in range(len(adjacency_list_train)):
-
-            adjacency_train = adjacency_list_train[i]
-            category = user_categories_train[i]
-            temporal = temporal_list_train[i]
-
-            idx = top_k_rows(adjacency_train, k)
-
-            adjacency_train = adjacency_train[idx[:,None], idx]
-            category = category[idx]
-            temporal = temporal[idx]
-            new_user_categories_train.append(category)
-            new_temporal_list_train.append(temporal)
-
-            if len(distance_list_train) > 0:
-
-                distance = distance_list_train[i]
-                duration = duration_list_train[i]
-                distance = distance[idx[:,None], idx]
-                duration = duration[idx[:,None], idx]
-                new_distance_list_train.append(distance)
-                new_duration_list_train.append(duration)
-
-            if model_name == "gcn" or model_name == "gae":
-                adjacency_train = sk.layers.GCNConv.preprocess(adjacency_train)
-            elif model_name == "arma" or model_name == "arma_enhanced" or model_name == "poi_gnn":
-                adjacency_train = sk.layers.ARMAConv.preprocess(adjacency_train)
-                user_matrix_week = sk.layers.ARMAConv.preprocess(adjacency_train)
-                user_matrix_weekend = sk.layers.ARMAConv.preprocess(adjacency_train)
-            elif model_name == "diff":
-                user_matrix = sk.layers.DiffusionConv.preprocess(adjacency_train)
-
-            new_adjacency_list_train.append(adjacency_train)
-
-        return np.array(new_adjacency_list_train), np.array(new_user_categories_train), np.array(new_temporal_list_train), np.array(new_distance_list_train), np.array(new_duration_list_train)
-
-    def preprocess_adjacency_matrix_test(self, k, model_name, adjacency_list_test, user_categories_test, temporal_list_test, distance_list_test, duration_list_test):
-
-        new_adjacency_list_test = []
-        new_user_categories_test = []
-        new_temporal_list_test = []
-        new_distance_list_test = []
-        new_duration_list_test = []
-        for i in range(len(adjacency_list_test)):
-
-            adjacency_test = adjacency_list_test[i]
-            category = user_categories_test[i]
-            temporal = temporal_list_test[i]
-
-            idx = top_k_rows(adjacency_test, k)
-
-            adjacency_test = adjacency_test[idx[:,None], idx]
-            category = category[idx]
-            temporal = temporal[idx]
-            new_user_categories_test.append(category)
-            new_temporal_list_test.append(temporal)
-
-            if len(distance_list_test) > 0:
-
-                distance = distance_list_test[i]
-                duration = duration_list_test[i]
-                distance = distance[idx[:,None], idx]
-                duration = duration[idx[:,None], idx]
-                new_distance_list_test.append(distance)
-                new_duration_list_test.append(duration)
-
-            if model_name == "gcn" or model_name == "gae":
-                adjacency_test = sk.layers.GCNConv.preprocess(adjacency_test)
-            elif model_name == "arma" or model_name == "arma_enhanced" or model_name == "poi_gnn":
-                adjacency_train = sk.layers.ARMAConv.preprocess(adjacency_test)
-                user_matrix_week = sk.layers.ARMAConv.preprocess(adjacency_test)
-                user_matrix_weekend = sk.layers.ARMAConv.preprocess(adjacency_test)
-            elif model_name == "diff":
-                user_matrix = sk.layers.DiffusionConv.preprocess(adjacency_test)
-
-            new_adjacency_list_test.append(adjacency_test)
-
-        return np.array(new_adjacency_list_test), np.array(new_user_categories_test), np.array(new_temporal_list_test), np.array(new_distance_list_test), np.array(new_duration_list_test)
-
 
     def _split_train_test(self,
                           k,
@@ -900,11 +440,6 @@ class PoiCategorizationDomain:
         else:            
             return (adjacency_list_train, user_categories_train, temporal_list_train,
                     adjacency_list_test, user_categories_test, temporal_list_test), class_weight
-
-
-    def _preprocess_features(self, features):
-        features = normalize(features, axis=1)
-        return features
 
     def k_fold_with_replication_train_and_evaluate_model(self,
                                                          inputs_folds,
@@ -1030,9 +565,6 @@ class PoiCategorizationDomain:
         input_test = [adjacency_test, adjacency_test_week, adjacency_test_weekend, temporal_test, temporal_test_week, temporal_test_weekend,
                       distance_test, duration_test, location_time_test, location_location_test]
         
-        print("\nDADOS DE TREINAMENTO\n")
-        print(input_train)
-
         # verifying whether categories arrays are equal
         compare1 = y_train == y_train_week
         compare2 = y_train_week == y_train_weekend
@@ -1046,8 +578,6 @@ class PoiCategorizationDomain:
                       weighted_metrics=[tf.keras.metrics.CategoricalAccuracy(name="acc")
                                         ])
         y_train = np_utils.to_categorical(y_train, num_classes=num_classes)
-        print("\nRÓTULOS DE TREINAMENTO\n")
-        print(y_train)
         y_test = np_utils.to_categorical(y_test, num_classes=num_classes)
         hi = model.fit(x=input_train,
                        y=y_train, validation_data=(input_test, y_test),
@@ -1063,16 +593,15 @@ class PoiCategorizationDomain:
         y_predict_location = model.predict(input_test,
                                            batch_size=batch)
 
-        print("\n PREDICT LOCATION EXIT \n", y_predict_location)
         scores = model.evaluate(input_test,
                                 y_test, batch_size=batch)
         print("\nscores: ", scores)
 
         # To transform one_hot_encoding to list of integers, representing the locations
         y_predict_location = one_hot_decoding_predicted(y_predict_location)
-        print("\nTAMANHO CONJUNTO DE TESTE: ", len(y_test))
-        print("\n PREDICT LOCATION (ONE HOT ENCODING) \n", y_predict_location)
-        print("\nTAMANHO SAÍDA: ", len(y_predict_location))
+        # print("\nTAMANHO CONJUNTO DE TESTE: ", len(y_test))
+        # print("\n PREDICT LOCATION (ONE HOT ENCODING) \n", y_predict_location)
+        # print("\nTAMANHO SAÍDA: ", len(y_predict_location))
         y_test = one_hot_decoding_predicted(y_test)
         report = skm.classification_report(y_test, y_predict_location, output_dict=True)
         print(report)

@@ -111,6 +111,9 @@ class PoiCategorizationLoader:
         print("Métricas fscore: \n", fscore)
         fscore.to_csv(output_dir + "fscore.csv", index_label=False, index=False)
 
+        # MLFLOW
+        # f_score_categoria = fscore.groupby().mean()
+
     def save_model_and_weights(self, model, output_dir, n_folds, n_replications):
         output_dir = output_dir + str(n_folds) + "_folds/" + str(n_replications) + "_replications/"
         Path(output_dir).mkdir(parents=True, exist_ok=True)

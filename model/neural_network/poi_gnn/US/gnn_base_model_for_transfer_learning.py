@@ -107,6 +107,22 @@ class GNNUS_BaseModel:
         out_gnn = Dense(self.classes, activation='softmax')(out_gnn)
         out = tf.Variable(1.) * out_dense + tf.Variable(1.) * out_gnn
 
-        model = Model(inputs=[A_input, A_week_input, A_weekend_input, Temporal_input, Temporal_week_input, Temporal_weekend_input, Distance_input, Duration_input, Location_time_input, Location_location_input], outputs=[out])
+        # new matrix and features?
+
+
+        model = Model(
+            inputs=[
+                A_input, 
+                A_week_input, 
+                A_weekend_input, 
+                Temporal_input, 
+                Temporal_week_input, 
+                Temporal_weekend_input, 
+                Distance_input, 
+                Duration_input, 
+                Location_time_input, 
+                Location_location_input,
+            ], 
+            outputs=[out])
 
         return model
