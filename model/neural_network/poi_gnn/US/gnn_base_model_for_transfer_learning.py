@@ -14,7 +14,6 @@ from spektral.layers import ops
 from spektral.utils.convolution import normalized_adjacency
 from tensorflow.keras import activations, initializers, regularizers, constraints
 
-
 iterations = 1          # Number of iterations to approximate each ARMA(1)
 order = 1               # Order of the ARMA filter (number of parallel stacks)
 share_weights = True    # Share weights in each ARMA stack
@@ -37,23 +36,23 @@ class GNNUS_BaseModel:
         if seed is not None:
             tf.random.set_seed(seed)
 
-        l2_reg = 5e-4 / 2  # L2 regularization rate
         A_input = Input((self.max_size_matrices,self.max_size_matrices))
         A_week_input = Input((self.max_size_matrices, self.max_size_matrices))
         A_weekend_input =  Input((self.max_size_matrices, self.max_size_matrices))
         Temporal_input = Input((self.max_size_matrices, self.features_num_columns))
         Temporal_week_input = Input((self.max_size_matrices, 24))
         Temporal_weekend_input = Input((self.max_size_matrices, 24))
-        Path_input = Input((self.max_size_matrices, self.max_size_sequence))
         Distance_input = Input((self.max_size_matrices,self.max_size_matrices))
-        Distance_week_input = Input((self.max_size_matrices, self.max_size_matrices))
-        Distance_weekend_input = Input((self.max_size_matrices, self.max_size_matrices))
         Duration_input = Input((self.max_size_matrices,self.max_size_matrices))
         A_week_input = Input((self.max_size_matrices, self.max_size_matrices))
-        Duration_week_input = Input((self.max_size_matrices, self.max_size_matrices))
-        Duration_weekend_input = Input((self.max_size_matrices, self.max_size_matrices))
-        Location_time_input = Input((self.max_size_matrices, self.features_num_columns))
-        Location_location_input = Input((self.max_size_matrices, self.max_size_matrices))
+        # Location_time_input = Input((self.max_size_matrices, self.features_num_columns))
+        # Location_location_input = Input((self.max_size_matrices, self.max_size_matrices))
+        # l2_reg = 5e-4 / 2  # L2 regularization rate
+        # Path_input = Input((self.max_size_matrices, self.max_size_sequence))
+        # Distance_week_input = Input((self.max_size_matrices, self.max_size_matrices))
+        # Distance_weekend_input = Input((self.max_size_matrices, self.max_size_matrices))
+        # Duration_week_input = Input((self.max_size_matrices, self.max_size_matrices))
+        # Duration_weekend_input = Input((self.max_size_matrices, self.max_size_matrices))
 
         out_temporal = ARMAConv(20, activation='elu',
                                 gcn_activation='gelu', share_weights=share_weights,
@@ -88,24 +87,24 @@ class GNNUS_BaseModel:
         out_duration = ARMAConv(self.classes,
                                 activation="softmax")([out_duration, A_input])
 
+        # usa
+        # out_location_location = ARMAConv(20, activation='elu',
+        #                         gcn_activation='gelu')([Location_time_input, Location_location_input])
+        # out_location_location = Dropout(0.3)(out_location_location)
+        # out_location_location = ARMAConv(self.classes,
+        #                         activation="softmax")([out_location_location, Location_location_input])
 
         # usa
-        out_location_location = ARMAConv(20, activation='elu',
-                                gcn_activation='gelu')([Location_time_input, Location_location_input])
-        out_location_location = Dropout(0.3)(out_location_location)
-        out_location_location = ARMAConv(self.classes,
-                                activation="softmax")([out_location_location, Location_location_input])
+        # out_location_time = Dense(40, activation='relu')(Location_time_input)
+        # out_location_time = Dense(self.classes, activation='softmax')(out_location_time)
 
-        # usa
-        out_location_time = Dense(40, activation='relu')(Location_time_input)
-        out_location_time = Dense(self.classes, activation='softmax')(out_location_time)
-
-        out_dense = tf.Variable(2.) * out_location_location + tf.Variable(2.) * out_location_time
-        out_dense = Dense(self.classes, activation='softmax')(out_dense)
+        # out_dense = tf.Variable(2.) * out_location_location + tf.Variable(2.) * out_location_time
+        # out_dense = Dense(self.classes, activation='softmax')(out_dense)
 
         out_gnn = tf.Variable(1.) * out_temporal + tf.Variable(1.) * out_week_temporal + tf.Variable(1.) * out_weekend_temporal + tf.Variable(1.) * out_distance + tf.Variable(1.) * out_duration
         out_gnn = Dense(self.classes, activation='softmax')(out_gnn)
-        out = tf.Variable(1.) * out_dense + tf.Variable(1.) * out_gnn
+        # out = tf.Variable(1.) * out_dense + tf.Variable(1.) * out_gnn
+        out = tf.Variable(1.) + tf.Variable(1.) * out_gnn
 
         # new matrix and features?
 
@@ -120,8 +119,8 @@ class GNNUS_BaseModel:
                 Temporal_weekend_input, 
                 Distance_input, 
                 Duration_input, 
-                Location_time_input, 
-                Location_location_input,
+                # Location_time_input, 
+                # Location_location_input,
             ], 
             outputs=[out])
 

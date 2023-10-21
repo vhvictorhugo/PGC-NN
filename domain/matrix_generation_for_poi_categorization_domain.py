@@ -17,7 +17,6 @@ from extractor.file_extractor import FileExtractor
 
 class MatrixGenerationForPoiCategorizationDomain:
 
-
     def __init__(self, dataset_name):
         self.matrix_generation_for_poi_categorization_loader = MatrixGenerationForPoiCategorizationLoader()
         self.file_extractor = FileExtractor()
@@ -31,7 +30,8 @@ class MatrixGenerationForPoiCategorizationDomain:
         self.LL = np.array([])
         self.LT = np.array([])
 
-    def generate_user_matrices(self, user_checkin,
+    def generate_user_matrices(self, 
+                               user_checkin,
                                userid,
                                datetime_column,
                                locationid_column,
@@ -215,7 +215,12 @@ class MatrixGenerationForPoiCategorizationDomain:
                                  'visited_location_ids': ['vazio'],
                                  'category': ['vazio']})
 
-    def _create_location_coocurrency_matrix(self, users_checkins, userid_column, datetime_column, locationid_column, locationid_to_int):
+    def _create_location_coocurrency_matrix(self, 
+                                            users_checkins, 
+                                            userid_column, 
+                                            datetime_column, 
+                                            locationid_column, 
+                                            locationid_to_int):
         try:
 
             users_checkins["time"] = [d.time() for d in users_checkins[datetime_column]]
