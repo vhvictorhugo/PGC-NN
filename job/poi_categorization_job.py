@@ -35,9 +35,9 @@ class PoiCategorizationJob:
         state = "Texas"
         version = "normal"
 
-        adjacency_regions_matrix_filename="gowalla/region_adjacency_matrix_texas.csv"
-        distance_regions_matrix_filename="gowalla/region_distance_feature_texas.csv"
-        adjacency_regions_feature_filename="gowalla/region_adjacency_feature_texas.csv"
+        adjacency_regions_matrix_filename=f"gowalla/region_adjacency_matrix_{state}.csv"
+        distance_regions_matrix_filename=f"gowalla/region_distance_feature_{state}.csv"
+        adjacency_regions_feature_filename=f"gowalla/region_adjacency_feature_{state}.csv"
 
         print("\nDataset: ", dataset_name)
 
