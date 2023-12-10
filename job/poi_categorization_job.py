@@ -32,7 +32,7 @@ class PoiCategorizationJob:
         location_time_filename = "gowalla/location_time_pmi_matrix_7_categories_US.csv"
         int_to_locationid_filename = "gowalla/int_to_locationid_7_categories_US.csv"
         country = "US"
-        state = "Texas"
+        state = "New_York"
         version = "normal"
 
         adjacency_regions_matrix_filename=f"gowalla/region_adjacency_matrix_{state}.csv"
@@ -107,21 +107,6 @@ class PoiCategorizationJob:
                 temporal_matrix_weekend_filename
             )
         )
-
-        print(
-            adjacency_df.shape, 
-            temporal_df.shape, 
-            adjacency_week_df.shape, 
-            temporal_week_df.shape,
-            adjacency_weekend_df.shape, 
-            temporal_weekend_df.shape, 
-            distance_df.shape, 
-            duration_df.shape,
-            adjacency_regions_matrix_df.shape,
-            distance_regions_df.shape,
-            adjacency_regions_feature_df.shape
-        )
-        input('Press enter')
 
         print("\nVerificação de matrizes\n")
         self.matrices_verification([
