@@ -188,6 +188,19 @@ class PoiCategorizationDomain:
 
         return location_time, location_location
 
+    def resize_regions_matrices(self, matrices):
+
+        maior_dimensao = max([m.shape for m in matrices])
+
+        matrizes_redimensionadas = []
+        
+        for matriz in matrices:
+            nova_matriz = np.zeros(maior_dimensao)
+            nova_matriz[:matriz.shape[0], :matriz.shape[1]] = matriz
+            matrizes_redimensionadas.append(nova_matriz)
+        
+        return matrizes_redimensionadas
+    
     def poi_gnn_adjacency_preprocessing(
             self,
             inputs,
@@ -344,22 +357,13 @@ class PoiCategorizationDomain:
                 user_temporal_matrix_weekend = user_temporal_matrices_weekend[idx]
                 temporal_matrices_weekend_list.append(self._min_max_normalize(user_temporal_matrix_weekend))
                 distance_matrices_list.append(user_distance_matrix[idx[:, None], idx])
-            
-                idx_regions = np.clip(idx, 0, user_regions_adjacency_matrix.shape[0] - 1)
-                adjacency_regions_matrix_list.append(
-                    user_regions_adjacency_matrix[idx_regions[:, None], idx_regions]
-                )
-
-                distance_regions_list.append(
-                    user_distance_regions[idx_regions[:, None], idx_regions]
-                )
-
-                adjacency_regions_feature_list.append(
-                    user_regions_adjacency_feature[idx_regions[:, None], idx_regions]
-                )
-
                 duration_matrices_list.append(user_duration_matrix[idx[:, None], idx])
                 users_categories.append(user_category[i])
+            
+                adjacency_regions_matrix_list.append(user_regions_adjacency_matrix)
+                distance_regions_list.append(user_distance_regions)
+                adjacency_regions_feature_list.append(user_regions_adjacency_feature)
+
                 # location time
                 user_location_time, user_location_location = (
                     self._filter_pmi_matrix(
@@ -387,11 +391,17 @@ class PoiCategorizationDomain:
         users_categories = np.array(users_categories)
 
         distance_matrices_list = np.array(distance_matrices_list)
-        duration_matrices_list = np.array(duration_matrices_list)
-
-        adjacency_regions_matrix_list = np.array(adjacency_regions_matrix_list)
-        distance_regions_list = np.array(distance_regions_list)
-        adjacency_regions_feature_list = np.array(adjacency_regions_feature_list)
+        duration_matrices_list = np.array(duration_matrices_list)        
+               
+        adjacency_regions_matrix_list = np.array(
+            self.resize_regions_matrices(adjacency_regions_matrix_list)
+        )
+        distance_regions_list = np.array(
+            self.resize_regions_matrices(distance_regions_list)
+        )
+        adjacency_regions_feature_list = np.array(
+            self.resize_regions_matrices(adjacency_regions_feature_list)
+        )
 
         # week
         matrices_week_list = np.array(matrices_week_list)

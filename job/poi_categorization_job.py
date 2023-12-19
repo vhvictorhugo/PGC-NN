@@ -32,7 +32,7 @@ class PoiCategorizationJob:
         location_time_filename = "gowalla/location_time_pmi_matrix_7_categories_US.csv"
         int_to_locationid_filename = "gowalla/int_to_locationid_7_categories_US.csv"
         country = "US"
-        state = "New_York"
+        state = "Alabama"
         version = "normal"
 
         adjacency_regions_matrix_filename=f"gowalla/region_adjacency_matrix_{state}.csv"
