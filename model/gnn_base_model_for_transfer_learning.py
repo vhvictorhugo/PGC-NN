@@ -38,10 +38,6 @@ class GNNUS_BaseModel:
         Location_time_input = Input((self.max_size_matrices, self.features_num_columns))
         Location_location_input = Input((self.max_size_matrices, self.max_size_matrices))
 
-        Adjacency_regions_input = Input((self.max_size_matrices, self.max_size_matrices))
-        Distance_regions_input = Input((self.max_size_matrices, self.max_size_matrices))
-        Adjacency_regions_feature_input = Input((self.max_size_matrices, self.max_size_matrices))
-
         out_temporal = ARMAConv(
             20, activation='elu',
             gcn_activation='gelu', 
@@ -112,45 +108,18 @@ class GNNUS_BaseModel:
         out_location_time = Dense(40, activation='relu')(Location_time_input)
         out_location_time = Dense(self.classes, activation='softmax')(out_location_time)
 
-        #regions
-        out_regions_distance = ARMAConv(
-            20, 
-            activation='elu',
-            gcn_activation='gelu'
-        )([Distance_regions_input, Adjacency_regions_input])
-        out_regions_distance = Dropout(0.3)(out_regions_distance)
-        out_regions_distance = ARMAConv(
-            self.classes, 
-            activation="softmax"
-        )([out_regions_distance, Adjacency_regions_input])
-
-        out_regions_adjacency = ARMAConv(
-            20, 
-            activation='elu',
-            gcn_activation='gelu'
-        )([Adjacency_regions_feature_input, Adjacency_regions_input])
-        out_regions_adjacency = Dropout(0.3)(out_regions_adjacency)
-        out_regions_adjacency = ARMAConv(
-            self.classes, 
-            activation="softmax"
-        )([out_regions_adjacency, Adjacency_regions_input])
-
         out_dense = (
-            tf.Variable(2.) * 
-            out_location_location + 
-            tf.Variable(2.) * 
-            out_location_time
+            tf.Variable(2.) *  out_location_location 
+            + tf.Variable(2.) *  out_location_time
         )
         out_dense = Dense(self.classes, activation='softmax')(out_dense)
 
         out_gnn = (
-            tf.Variable(1.) * out_temporal + 
-            tf.Variable(1.) * out_week_temporal + 
-            tf.Variable(1.) * out_weekend_temporal + 
-            tf.Variable(1.) * out_distance + 
-            tf.Variable(1.) * out_duration +
-            tf.Variable(1.) * out_regions_distance +
-            tf.Variable(1.) * out_regions_adjacency
+            tf.Variable(1.) * out_temporal 
+            + tf.Variable(1.) * out_week_temporal 
+            + tf.Variable(1.) * out_weekend_temporal 
+            + tf.Variable(1.) * out_distance 
+            + tf.Variable(1.) * out_duration
         )
 
         out_gnn = Dense(self.classes, activation='softmax')(out_gnn)
@@ -167,10 +136,7 @@ class GNNUS_BaseModel:
                 Distance_input, 
                 Duration_input, 
                 Location_time_input, 
-                Location_location_input,
-                Adjacency_regions_input,
-                Distance_regions_input,
-                Adjacency_regions_feature_input
+                Location_location_input
             ], 
             outputs=[out])
 

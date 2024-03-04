@@ -35,10 +35,6 @@ class PoiCategorizationJob:
         state = "Alabama"
         version = "normal"
 
-        adjacency_regions_matrix_filename=f"gowalla/region_adjacency_matrix_{state}.csv"
-        distance_regions_matrix_filename=f"gowalla/region_distance_feature_{state}.csv"
-        adjacency_regions_feature_filename=f"gowalla/region_adjacency_feature_{state}.csv"
-
         print("\nDataset: ", dataset_name)
 
         max_size_matrices = self.poi_categorization_configuration.MAX_SIZE_MATRICES[1]
@@ -76,18 +72,14 @@ class PoiCategorizationJob:
 
         # normal matrices
         (
-            adjacency_df, temporal_df, distance_df, duration_df, 
-            adjacency_regions_matrix_df, distance_regions_df, adjacency_regions_feature_df
+            adjacency_df, temporal_df, distance_df, duration_df
         ) = (
             self.poi_categorization_domain.
             read_matrix(
                 adjacency_matrix_filename, 
                 temporal_matrix_filename, 
                 distance_matrix_filename=distance_matrix_filename, 
-                duration_matrix_filename=duration_matrix_filename,
-                adjacency_regions_matrix_filename=adjacency_regions_matrix_filename,
-                distance_regions_matrix_filename=distance_regions_matrix_filename,
-                adjacency_regions_feature_filename=adjacency_regions_feature_filename,
+                duration_matrix_filename=duration_matrix_filename
             )
         )
 
@@ -117,10 +109,7 @@ class PoiCategorizationJob:
             adjacency_weekend_df, 
             temporal_weekend_df, 
             distance_df, 
-            duration_df,
-            adjacency_regions_matrix_df,
-            distance_regions_df,
-            adjacency_regions_feature_df
+            duration_df
         ])
 
         location_location = self.file_extractor.read_npz(location_location_filename)
@@ -135,10 +124,7 @@ class PoiCategorizationJob:
                 'duration': duration_df,
                 'location_location': location_location, 
                 'location_time': location_time, 
-                'int_to_locationid': int_to_locationid,
-                'adjacency_regions_matrix_df': adjacency_regions_matrix_df,
-                'distance_regions_df':distance_regions_df,
-                'adjacency_regions_feature_df':adjacency_regions_feature_df,
+                'int_to_locationid': int_to_locationid
             },
             'week': {
                 'adjacency': adjacency_week_df, 
@@ -163,10 +149,7 @@ class PoiCategorizationJob:
             temporal_weekend_df, 
             location_time_df, 
             location_location_df, 
-            selected_users,
-            adjacency_regions_matrix_df,
-            distance_regions_df,
-            adjacency_regions_feature_df,
+            selected_users
         ) = (
             self.poi_categorization_domain
             .poi_gnn_adjacency_preprocessing(
@@ -185,10 +168,7 @@ class PoiCategorizationJob:
             temporal_week_df,
             adjacency_weekend_df, 
             temporal_weekend_df, 
-            distance_df,
-            adjacency_regions_matrix_df,
-            distance_regions_df,
-            adjacency_regions_feature_df,
+            distance_df
         ])
         
         inputs = {
@@ -199,10 +179,7 @@ class PoiCategorizationJob:
                 'location_location': location_location_df, 
                 'categories': users_categories,
                 'distance': distance_df, 
-                'duration': duration_df,
-                'adjacency_regions_matrix': adjacency_regions_matrix_df,
-                'distance_regions': distance_regions_df,
-                'adjacency_regions_feature':adjacency_regions_feature_df,
+                'duration': duration_df
             },
             'week': {
                 'adjacency': adjacency_week_df, 

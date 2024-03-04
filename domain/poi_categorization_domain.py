@@ -35,10 +35,7 @@ class PoiCategorizationDomain:
             adjacency_matrix_filename, 
             temporal_matrix_filename, 
             distance_matrix_filename=None, 
-            duration_matrix_filename=None,
-            adjacency_regions_matrix_filename=None,
-            distance_regions_matrix_filename=None,
-            adjacency_regions_feature_filename=None,
+            duration_matrix_filename=None
     ):
 
         adjacency_df = self.file_extractor.read_csv(adjacency_matrix_filename).drop_duplicates(subset=['user_id'])
@@ -47,10 +44,7 @@ class PoiCategorizationDomain:
 
         if (
             distance_matrix_filename is not None and 
-            duration_matrix_filename is not None and
-            adjacency_regions_matrix_filename is not None and
-            distance_regions_matrix_filename is not None and
-            adjacency_regions_feature_filename is not None
+            duration_matrix_filename is not None
         ):
             distance_matrix_df = self.file_extractor.read_csv(distance_matrix_filename).drop_duplicates(
                 subset=['user_id'])
@@ -60,26 +54,11 @@ class PoiCategorizationDomain:
                 print("\nMATRIZES DIFERENTES\n")
                 raise
 
-            adjacency_regions_df = self.file_extractor.read_csv(
-                adjacency_regions_matrix_filename
-            ).drop_duplicates(subset=['userid'])
-
-            distance_regions_df = self.file_extractor.read_csv(
-                distance_regions_matrix_filename
-            ).drop_duplicates(subset=['userid'])
-
-            adjacency_regions_feature_df = self.file_extractor.read_csv(
-                adjacency_regions_feature_filename
-            ).drop_duplicates(subset=['userid'])
-
             return (
                 adjacency_df, 
                 temporal_matrix_df, 
                 distance_matrix_df, 
-                duration_matrix_df, 
-                adjacency_regions_df,
-                distance_regions_df,
-                adjacency_regions_feature_df,
+                duration_matrix_df
             )
         
         else:
@@ -187,19 +166,6 @@ class PoiCategorizationDomain:
         location_location = sk.layers.GCNConv.preprocess(location_location)
 
         return location_time, location_location
-
-    def resize_regions_matrices(self, matrices):
-
-        maior_dimensao = max([m.shape for m in matrices])
-
-        matrizes_redimensionadas = []
-        
-        for matriz in matrices:
-            nova_matriz = np.zeros(maior_dimensao)
-            nova_matriz[:matriz.shape[0], :matriz.shape[1]] = matriz
-            matrizes_redimensionadas.append(nova_matriz)
-        
-        return matrizes_redimensionadas
     
     def poi_gnn_adjacency_preprocessing(
             self,
@@ -220,11 +186,6 @@ class PoiCategorizationDomain:
         # location time
         location_time_list = []
         location_location_list = []
-
-        # regions
-        adjacency_regions_matrix_list = []
-        distance_regions_list = []
-        adjacency_regions_feature_list = []
 
         users_categories = []
         maior = -10
@@ -249,11 +210,6 @@ class PoiCategorizationDomain:
         # weekend
         matrix_weekend_df = inputs['weekend']['adjacency']['matrices'].tolist()
         temporal_weekend_df = inputs['weekend']['temporal']['matrices'].tolist()
-
-        # regions
-        adjacency_regions_matrix_df = inputs['all_week']['adjacency_regions_matrix_df']['matrices'].to_list()
-        distance_regions_df = inputs['all_week']['distance_regions_df']['matrices'].to_list()
-        adjacency_regions_feature_df = inputs['all_week']['adjacency_regions_feature_df']['matrices'].to_list()
 
         selected_visited_locations = []
 
@@ -330,18 +286,6 @@ class PoiCategorizationDomain:
             user_duration_matrix = duration_df[i]
             user_duration_matrix = json.loads(user_duration_matrix)
             user_duration_matrix = np.array(user_duration_matrix)
-            """regions"""
-            user_regions_adjacency_matrix = adjacency_regions_matrix_df[i]
-            user_regions_adjacency_matrix = json.loads(user_regions_adjacency_matrix)
-            user_regions_adjacency_matrix = np.array(user_regions_adjacency_matrix)
-
-            user_distance_regions = distance_regions_df[i]
-            user_distance_regions = json.loads(user_distance_regions)
-            user_distance_regions = np.array(user_distance_regions)
-
-            user_regions_adjacency_feature = adjacency_regions_feature_df[i]
-            user_regions_adjacency_feature = json.loads(user_regions_adjacency_feature)
-            user_regions_adjacency_feature = np.array(user_regions_adjacency_feature)
 
             for i in range(number_of_matrices):
 
@@ -359,10 +303,6 @@ class PoiCategorizationDomain:
                 distance_matrices_list.append(user_distance_matrix[idx[:, None], idx])
                 duration_matrices_list.append(user_duration_matrix[idx[:, None], idx])
                 users_categories.append(user_category[i])
-            
-                adjacency_regions_matrix_list.append(user_regions_adjacency_matrix)
-                distance_regions_list.append(user_distance_regions)
-                adjacency_regions_feature_list.append(user_regions_adjacency_feature)
 
                 # location time
                 user_location_time, user_location_location = (
@@ -391,17 +331,7 @@ class PoiCategorizationDomain:
         users_categories = np.array(users_categories)
 
         distance_matrices_list = np.array(distance_matrices_list)
-        duration_matrices_list = np.array(duration_matrices_list)        
-               
-        adjacency_regions_matrix_list = np.array(
-            self.resize_regions_matrices(adjacency_regions_matrix_list)
-        )
-        distance_regions_list = np.array(
-            self.resize_regions_matrices(distance_regions_list)
-        )
-        adjacency_regions_feature_list = np.array(
-            self.resize_regions_matrices(adjacency_regions_feature_list)
-        )
+        duration_matrices_list = np.array(duration_matrices_list)
 
         # week
         matrices_week_list = np.array(matrices_week_list)
@@ -424,10 +354,7 @@ class PoiCategorizationDomain:
             temporal_matrices_weekend_list,
             location_time_list, 
             location_location_list, 
-            selected_users, 
-            adjacency_regions_matrix_list,
-            distance_regions_list,
-            adjacency_regions_feature_list
+            selected_users
         )
 
     def k_fold_split_train_test(
@@ -447,17 +374,11 @@ class PoiCategorizationDomain:
             duration_list = inputs[week_type]['duration']
             location_time = inputs[week_type]['location_time']
             location_location_list = inputs[week_type]['location_location']
-            adjacency_regions_matrix_list = inputs[week_type]['adjacency_regions_matrix']
-            distance_regions_list = inputs[week_type]['distance_regions']
-            adjacency_regions_feature_list = inputs[week_type]['adjacency_regions_feature']
         else:
             distance_list = []
             duration_list = []
             location_time = []
             location_location_list = []
-            adjacency_regions_matrix_list = []
-            distance_regions_list = []
-            adjacency_regions_feature_list = []
         skip = False
         if n_splits == 1:
             skip = True
@@ -479,9 +400,6 @@ class PoiCategorizationDomain:
                     location_location_list,
                     distance_list,
                     duration_list,
-                    adjacency_regions_matrix_list,
-                    distance_regions_list,
-                    adjacency_regions_feature_list,
                     train_indexes,
                     test_indexes
                 )
@@ -504,12 +422,7 @@ class PoiCategorizationDomain:
             location_time_list,
             location_location_list,
             distance_list,
-            duration_list,
-
-            adjacency_regions_matrix_list,
-            distance_regions_list,
-            adjacency_regions_feature_list,
-            
+            duration_list,            
             train_indexes,
             test_indexes
     ):
@@ -526,17 +439,11 @@ class PoiCategorizationDomain:
             duration_list_train = duration_list[train_indexes]
             location_time_list_train = location_time_list[train_indexes]
             location_location_list_train = location_location_list[train_indexes]
-            adjacency_regions_matrix_list_train = adjacency_regions_matrix_list[train_indexes]
-            distance_regions_list_train = distance_regions_list[train_indexes]
-            adjacency_regions_feature_list_train = adjacency_regions_feature_list[train_indexes]
         else:
             distance_list_train = []
             duration_list_train = []
             location_time_list_train = []
             location_location_list_train = []
-            adjacency_regions_matrix_list_train = []
-            distance_regions_list_train = []
-            adjacency_regions_feature_list_train = []
 
         adjacency_list_test = adjacency_list[test_indexes]
         user_categories_test = user_categories[test_indexes]
@@ -547,17 +454,11 @@ class PoiCategorizationDomain:
             duration_list_test = duration_list[test_indexes]
             location_time_list_test = location_time_list[test_indexes]
             location_location_list_test = location_location_list[test_indexes]
-            adjacency_regions_matrix_list_test = adjacency_regions_matrix_list[test_indexes]
-            distance_regions_list_test = distance_regions_list[test_indexes]
-            adjacency_regions_feature_list_test = adjacency_regions_feature_list[test_indexes]
         else:
             distance_list_test = []
             duration_list_test = []
             location_time_list_test = []
             location_location_list_test = []
-            adjacency_regions_matrix_list_test = []
-            distance_regions_list_test = []
-            adjacency_regions_feature_list_test = []
 
         flatten_train_category = []
         for categories_list in user_categories_train:
@@ -596,9 +497,6 @@ class PoiCategorizationDomain:
                     duration_list_train,
                     location_time_list_train, 
                     location_location_list_train, 
-                    adjacency_regions_matrix_list_train,
-                    distance_regions_list_train,
-                    adjacency_regions_feature_list_train,
                     adjacency_list_test, 
                     user_categories_test, 
                     temporal_list_test, 
@@ -606,9 +504,6 @@ class PoiCategorizationDomain:
                     duration_list_test, 
                     location_time_list_test, 
                     location_location_list_test,
-                    adjacency_regions_matrix_list_test,
-                    distance_regions_list_test,
-                    adjacency_regions_feature_list_test
                 ),
                 class_weight
             )
@@ -713,19 +608,13 @@ class PoiCategorizationDomain:
         duration_train,  
         location_time_train, 
         location_location_train,
-        adjacency_regions_matrix_train,
-        distance_regions_list_train,
-        adjacency_regions_feature_train,
         adjacency_test, 
         y_test, 
         temporal_test, 
         distance_test, 
         duration_test, 
         location_time_test, 
-        location_location_test,
-        adjacency_regions_matrix_test,
-        distance_regions_list_test,
-        adjacency_regions_feature_test) = fold
+        location_location_test) = fold
 
         (adjacency_week_train, 
         y_train_week, 
@@ -764,10 +653,7 @@ class PoiCategorizationDomain:
             distance_train.shape, 
             duration_train.shape, 
             location_time_train.shape, 
-            location_location_train.shape,
-            adjacency_regions_matrix_train.shape,
-            distance_regions_list_train.shape,
-            adjacency_regions_feature_train.shape
+            location_location_train.shape
         )
 
         print("\nTamanho das matrizes de teste: ", 
@@ -778,10 +664,7 @@ class PoiCategorizationDomain:
                 distance_test.shape, 
                 duration_test.shape, 
                 location_time_test.shape, 
-                location_location_test.shape,
-                adjacency_regions_matrix_test.shape,
-                distance_regions_list_test.shape,
-                adjacency_regions_feature_test.shape
+                location_location_test.shape
         )
         
         model = (
@@ -809,10 +692,7 @@ class PoiCategorizationDomain:
                 temporal_test_week[user_index], 
                 temporal_test_weekend[user_index], 
                 location_time_test[user_index], 
-                location_location_test[user_index],
-                adjacency_regions_matrix_test[user_index],
-                distance_regions_list_train[user_index],
-                adjacency_regions_feature_test[user_index],
+                location_location_test[user_index]
             ],
             [
                 "Adjacency", 
@@ -837,10 +717,7 @@ class PoiCategorizationDomain:
             distance_train,
             duration_train, 
             location_time_train, 
-            location_location_train,
-            adjacency_regions_matrix_train,
-            distance_regions_list_train,
-            adjacency_regions_feature_train
+            location_location_train
         ]
 
         input_test = [
@@ -853,10 +730,7 @@ class PoiCategorizationDomain:
             distance_test, 
             duration_test, 
             location_time_test, 
-            location_location_test,
-            adjacency_regions_matrix_test,
-            distance_regions_list_test,
-            adjacency_regions_feature_test
+            location_location_test
         ]
         
         # verifying whether categories arrays are equal
